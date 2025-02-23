@@ -27,8 +27,6 @@ def home():
 
         return render_template('index.html', listings=listings)
 
-    # If not logged in, redirect to login page
-    flash("You need to log in to view the listings")
     return redirect(url_for('login'))
 
 
@@ -41,8 +39,8 @@ def login():
         try:
             # Attempt to sign in with email and password
             user = auth.get_user_by_email(email)
-            # Check if the password is correct (Firebase Auth handles this for you)
-            # Firebase SDK doesn't provide a direct way to check password, but you can use Firebase client libraries on the front-end to handle login securely.
+            # (should) Check if the password is correct
+            # IT ACTUALLY DOESNT DO THIS YET. SOMEHOW WE NEED TO VERIFY THE PASSWORD IS CORRECT
 
             # If authentication is successful, log the user in by saving their UID in the session
             session['user_id'] = user.uid
