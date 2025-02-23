@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Listings</title>
+</head>
+<body>
+    <h1>Available Housing</h1>
+    <ul>
+        {% for listing in listings %}
+        <li>
+            <h2>{{ listing.id }}</h2>
+            <p>Distance from Campus: {{ listing.distance }} min</p>
+            <p># of Roommates: {{ listing.roommates }}</p>
+            <p>Rent: ${{ listing.rent }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
