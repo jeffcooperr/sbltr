@@ -1,6 +1,6 @@
 import requests
 import firebase_admin
-from firebase_admin import credentials, firestore, auth
+from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 # Initialize Flask app
@@ -32,6 +32,37 @@ def home():
         return render_template('index.html', listings=listings)
 
     return redirect(url_for('login'))
+
+
+@app.route('/add_listing', methods=['GET', 'POST'])
+def add_listing():
+    if 'user_id' not in session:
+        flash("Please log in to add a listing.")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        address = request.form['address']
+        distance = request.form['distance']
+        roommates = request.form['roommates']
+        rent = request.form['rent']
+
+        new_listing = {
+            "user_id": session['user_id'],
+            "address": address,
+            "distance": distance,
+            "roommates": roommates,
+            "rent": rent
+        }
+
+        try:
+            db.collection("listings").add(new_listing)
+            flash("Listing added successfully!")
+            return redirect(url_for('home'))
+        except Exception as e:
+            flash(f"Error adding listing: {str(e)}")
+            return redirect(url_for('add_listing'))
+
+    return render_template('add_listing.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
