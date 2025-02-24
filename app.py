@@ -17,7 +17,7 @@ db = firestore.client()
 
 @app.route('/')
 def home():
-    # If the user is logged in, show the listings
+    # If the user is logged in, show the listingss
     if 'user_id' in session:
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
