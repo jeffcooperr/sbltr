@@ -1,3 +1,4 @@
+import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -5,6 +6,9 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = 'FLASK_SECRET_KEY'  # Required for using sessions
+
+# Firebase web api key
+FIREBASE_WEB_API_KEY = 'AIzaSyCwfP86mWJJQyZ073oYDM9jxA23oamsGko'
 
 # Initialize Firestore
 cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')
@@ -36,16 +40,27 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        try:
-            # Attempt to sign in with email and password
-            user = auth.get_user_by_email(email)
-            # (should) Check if the password is correct
-            # IT ACTUALLY DOESNT DO THIS YET. SOMEHOW WE NEED TO VERIFY THE PASSWORD IS CORRECT
+        # Firebase REST API endpoint for sign-in
+        url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
 
-            # If authentication is successful, log the user in by saving their UID in the session
-            session['user_id'] = user.uid
-            flash("Login successful!")
-            return redirect(url_for('home'))
+        payload = {
+            "email": email,
+            "password": password,
+            "returnSecureToken": True
+        }
+
+        try:
+            response = requests.post(url, json=payload)
+            data = response.json()
+
+            if "idToken" in data:
+                session['user_id'] = data['localId']  # Store user ID in session
+                flash("Login successful!")
+                return redirect(url_for('home'))
+            else:
+                flash(data.get("error", {}).get("message", "Invalid login credentials"))
+                return redirect(url_for('login'))
+
         except Exception as e:
             flash(f"Error logging in: {str(e)}")
             return redirect(url_for('login'))
