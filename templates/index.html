@@ -18,15 +18,8 @@
         {% endfor %}
     </ul>
     <a href="{{ url_for('add_listing') }}">Add a Listing</a>
-</body>
 
- <form action="{{ url_for('login') }}" method="POST"
-      id="login_form">
-    <div>
-        <button type="submit" class="btn btn-primary mt-4">
-            Go back to login
-        </button>
-    </div>
-</form>
+    <p><a href="{{ url_for('login') }}">Go back to login</a></p>
+</body>
 
 </html>
