@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Housing Listings</title>
+    <title>sbltr</title>
 </head>
 <body>
     <h1>Available Housing</h1>
     <ul>
         {% for listing in listings %}
         <li>
-            <h2>{{ listing.id }}</h2>
+            <h2>{{ listing.address }}</h2>
             <p>Distance from Campus: {{ listing.distance }} min</p>
             <p># of Roommates: {{ listing.roommates }}</p>
             <p>Rent: ${{ listing.rent }}</p>
         </li>
         {% endfor %}
     </ul>
-
-    <h2>{{ success_message }}</h2>
+    <a href="{{ url_for('add_listing') }}">Add a Listing</a>
+    <!-- Temp -->
+    <p><a href="{{ url_for('login') }}">Go back to login</a></p>
 </body>
+
 </html>
