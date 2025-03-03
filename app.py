@@ -2,6 +2,9 @@ import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+import base64
+from PIL import Image
+from io import BytesIO
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -45,13 +48,17 @@ def add_listing():
         distance = request.form['distance']
         roommates = request.form['roommates']
         rent = request.form['rent']
+        image = request.form['image']
+
+        image_string = image_convert(image)
 
         new_listing = {
             "user_id": session['user_id'],
             "address": address,
             "distance": distance,
             "roommates": roommates,
-            "rent": rent
+            "rent": rent,
+            "image": image_string
         }
 
         try:
@@ -126,6 +133,32 @@ def logout():
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
+
+def image_convert(image):
+    # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
+    MAX_SIZE = 1048487
+    image = Image.open(image)
+
+    quality = 50
+    # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
+    buffer = BytesIO()
+
+    while quality > 5:
+        # Move pointer to the beginning of buffer and clear out any remaining data
+        buffer.seek(0)
+        buffer.truncate()
+
+        # Save the image to the buffer with the specified quality
+        image.save(buffer, format="JPEG", quality=quality)
+
+        # Encode the image as a base64 string and check if its size is below the limit
+        encoded_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        if len(encoded_string) <= MAX_SIZE:
+            return encoded_string
+
+        # Reduce quality if image string was too large
+        quality -= 5
+
 
 
 if __name__ == '__main__':
