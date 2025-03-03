@@ -159,7 +159,5 @@ def image_convert(image):
         # Reduce quality if image string was too large
         quality -= 5
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
