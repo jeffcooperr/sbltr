@@ -138,6 +138,9 @@ def image_convert(image):
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
     MAX_SIZE = 1048487
     image = Image.open(image)
+    # Ensure that the image is in JPEG format
+    image = image.convert('RGB')
+
 
     quality = 50
     # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
