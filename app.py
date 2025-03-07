@@ -3,6 +3,8 @@ import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
@@ -25,6 +27,9 @@ cred = credentials.Certificate('path')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+# Anchor Point for central campus
+CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
+
 @app.route('/')
 def home():
     # If the user is logged in, show the listings
@@ -45,16 +50,22 @@ def home():
 
 
 @app.route('/add_listing', methods=['GET', 'POST'])
-def add_listing():
+def add_listing():    
     if 'user_id' not in session:
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         address = request.form['address']
-        distance = request.form['distance']
         roommates = request.form['roommates']
         rent = request.form['rent']
+
+        #calculate distance automatically
+        distance = get_distance(address)
+
+        if distance is None:
+            flash("Could not determine distance")
+            return redirect(url_for('add_listing'))
 
         new_listing = {
             "user_id": session['user_id'],
@@ -136,6 +147,19 @@ def logout():
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
+
+# Should edit this at some point so that user can enter city, state, country
+# Or just make it automatic when they autofill address
+def get_distance(address, city="Burlington", state="VT", country="USA"):
+    geolocator = Nominatim(user_agent="sublet")
+    full_address = f"{address}, {city}, {state}, {country}"
+    location = geolocator.geocode(full_address)
+
+    if location:
+        house_coordinates = (location.latitude, location.longitude)
+        distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
+        return round(distance, 2)
+    return None
 
 
 if __name__ == '__main__':
