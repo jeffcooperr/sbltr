@@ -138,6 +138,8 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
+# Should edit this at some point so that user can enter city, state, country
+# Or just make it automatic when they autofill address
 def get_distance(address, city="Burlington", state="VT", country="USA"):
     geolocator = Nominatim(user_agent="sublet")
     full_address = f"{address}, {city}, {state}, {country}"
