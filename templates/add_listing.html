@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Listing</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVB34rpLNZCLeb5Poe7o-CWfFEoyFB8L4&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places"></script>
 </head>
 <body>
     <h1>Add a New Listing</h1>
@@ -41,13 +41,7 @@
 
     <p><a href="{{ url_for('home') }}">Back to Listings</a></p>
 
-    <script>
-        function initializeAutocomplete() {
-            var input = document.getElementById('address');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-        }
-        google.maps.event.addDomListener(window, 'load', initializeAutocomplete);
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>
