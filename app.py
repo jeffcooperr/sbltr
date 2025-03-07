@@ -1,14 +1,24 @@
+import os
 import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+# Code of your application, which uses environment variables (e.g. from `os.environ` or
+# `os.getenv`) as if they came from the actual environment.
+
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'FLASK_SECRET_KEY'  # Required for using sessions
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Firebase web api key
-FIREBASE_WEB_API_KEY = 'AIzaSyCwfP86mWJJQyZ073oYDM9jxA23oamsGko'
+FIREBASE_WEB_API_KEY = os.getenv('FIREBASE_WEB_API_KEY')
+
+# Google API
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize Firestore
 cred = credentials.Certificate('path')  # Update with the correct path
@@ -62,7 +72,7 @@ def add_listing():
             flash(f"Error adding listing: {str(e)}")
             return redirect(url_for('add_listing'))
 
-    return render_template('add_listing.html')
+    return render_template('add_listing.html', google_api_key=GOOGLE_API_KEY)
 
 
 @app.route('/login', methods=['GET', 'POST'])
