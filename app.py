@@ -1,22 +1,37 @@
+import os
 import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth, storage
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+# Code of your application, which uses environment variables (e.g. from `os.environ` or
+# `os.getenv`) as if they came from the actual environment.
+
 import base64
 from PIL import Image
 from io import BytesIO
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'FLASK_SECRET_KEY'  # Required for using sessions
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Firebase web api key
-FIREBASE_WEB_API_KEY = 'AIzaSyCwfP86mWJJQyZ073oYDM9jxA23oamsGko'
+FIREBASE_WEB_API_KEY = os.getenv('FIREBASE_WEB_API_KEY')
+
+# Google API
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-384b0b17a1.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+# Anchor Point for central campus
+CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
 @app.route('/')
 def home():
@@ -38,19 +53,32 @@ def home():
 
 
 @app.route('/add_listing', methods=['GET', 'POST'])
-def add_listing():
+def add_listing():    
     if 'user_id' not in session:
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         address = request.form['address']
-        distance = request.form['distance']
         roommates = request.form['roommates']
         rent = request.form['rent']
         image = request.form['image']
 
         image_string = image_convert(image)
+
+        #calculate distance automatically
+        distance = get_distance(address)
+
+        if distance is None:
+            flash("Could not determine distance")
+            return redirect(url_for('add_listing'))
+
+        #calculate distance automatically
+        distance = get_distance(address)
+
+        if distance is None:
+            flash("Could not determine distance")
+            return redirect(url_for('add_listing'))
 
         new_listing = {
             "user_id": session['user_id'],
@@ -69,7 +97,7 @@ def add_listing():
             flash(f"Error adding listing: {str(e)}")
             return redirect(url_for('add_listing'))
 
-    return render_template('add_listing.html')
+    return render_template('add_listing.html', google_api_key=GOOGLE_API_KEY)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -133,6 +161,18 @@ def logout():
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
+
+# Should edit this at some point so that user can enter city, state, country
+# Or just make it automatic when they autofill address
+def get_distance(address):
+    geolocator = Nominatim(user_agent="sublet")
+    location = geolocator.geocode(address)
+
+    if location:
+        house_coordinates = (location.latitude, location.longitude)
+        distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
+        return round(distance, 2)
+    return None
 
 def image_convert(image):
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
