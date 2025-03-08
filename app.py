@@ -6,14 +6,13 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
+import base64
+from PIL import Image
+from io import BytesIO
 
 load_dotenv()  # take environment variables from .env.
 # Code of your application, which uses environment variables (e.g. from `os.environ` or
 # `os.getenv`) as if they came from the actual environment.
-
-import base64
-from PIL import Image
-from io import BytesIO
 
 # Initialize Flask app
 app = Flask(__name__)
