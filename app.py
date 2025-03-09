@@ -118,12 +118,43 @@ def login():
             response = requests.post(url, json=payload)
             data = response.json()
 
+            print("Response from Firebase:", data)
+
             if "idToken" in data:
-                session['user_id'] = data['localId']  # Store user ID in session
-                flash("Login successful!")
-                return redirect(url_for('home'))
+                # Get user verification status
+                user_info_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
+                user_payload = {"idToken": data["idToken"]}
+                user_response = requests.post(user_info_url, json=user_payload)
+                user_data = user_response.json()
+
+                if "users" in user_data and len(user_data["users"]) > 0:
+                    user = user_data["users"][0]
+
+                    # Check if email is verified
+                    if user.get("emailVerified", False):
+                        # Store user ID in session
+                        session['user_id'] = data['localId']
+                        flash("Login successful!")
+                        return redirect(url_for('home'))
+                    else:
+                        # Send a new verification email if they didn't verify their email.
+                        verification_url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                        verification_payload = {
+                            "requestType": "VERIFY_EMAIL",
+                            "idToken": data["idToken"]
+                        }
+                        requests.post(verification_url, json=verification_payload)
+
+                        flash(
+                            "Your email is not verified! A new verification email has been sent. Please check your inbox.")
+                        return redirect(url_for('login'))
+                else:
+                    flash("Unable to retrieve user information. Please try again.")
+                    return redirect(url_for('login'))
             else:
-                flash(data.get("error", {}).get("message", "Invalid login credentials"))
+                error_message = data.get("error", {}).get("message", "Invalid login credentials")
+                print("Login error:", error_message)
+                flash(error_message)
                 return redirect(url_for('login'))
 
         except Exception as e:
@@ -153,8 +184,6 @@ def signup():
             return redirect(url_for('signup'))
 
     return render_template('signup.html')
-
-
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)

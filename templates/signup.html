@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <script type="module" src = "../static/firebaseauth.js"></script>
 </head>
 <body>
     <h1>Create an Account</h1>
@@ -32,5 +31,11 @@
     </form>
 
     <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+    <div id="verificationMessage" style="display:none;">
+        Verifying your email...
+    </div>
+
+    <script type="module" src = "../static/firebaseauth.js"></script>
 </body>
 </html>
