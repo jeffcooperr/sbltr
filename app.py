@@ -25,7 +25,7 @@ FIREBASE_WEB_API_KEY = os.getenv('FIREBASE_WEB_API_KEY')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize Firestore
-cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-384b0b17a1.json')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
