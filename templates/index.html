@@ -10,6 +10,7 @@
     <ul>
         {% for listing in listings %}
         <li>
+            <figure><img src="data:image/jpeg;base64, {{ listing.image }}" alt="House" width="100px"></figure>
             <h2>{{ listing.address }}</h2>
             <p>Distance from Campus: {{ listing.distance }} miles</p>
             <p># of Roommates: {{ listing.roommates }}</p>

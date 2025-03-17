@@ -18,16 +18,24 @@
         {% endif %}
     {% endwith %}
 
-    <form method="POST">
+    <form id = "signUpForm">
+        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
 
-        <button type="submit">Sign Up</button>
+        <button id ="submitSignUp" type="submit">Sign Up</button>
     </form>
 
     <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+    <div id="verificationMessage" style="display:none;">
+        Verifying your email...
+    </div>
+
+    <script type="module" src = "../static/firebaseauth.js"></script>
 </body>
 </html>

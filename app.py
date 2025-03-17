@@ -6,11 +6,13 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
+import base64
+from PIL import Image
+from io import BytesIO
 
 load_dotenv()  # take environment variables from .env.
 # Code of your application, which uses environment variables (e.g. from `os.environ` or
 # `os.getenv`) as if they came from the actual environment.
-
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -23,7 +25,7 @@ FIREBASE_WEB_API_KEY = os.getenv('FIREBASE_WEB_API_KEY')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Initialize Firestore
-cred = credentials.Certificate('path')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-384b0b17a1.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -59,6 +61,16 @@ def add_listing():
         address = request.form['address']
         roommates = request.form['roommates']
         rent = request.form['rent']
+        image = request.form['image']
+
+        image_string = image_convert(image)
+
+        #calculate distance automatically
+        distance = get_distance(address)
+
+        if distance is None:
+            flash("Could not determine distance")
+            return redirect(url_for('add_listing'))
 
         #calculate distance automatically
         distance = get_distance(address)
@@ -72,7 +84,8 @@ def add_listing():
             "address": address,
             "distance": distance,
             "roommates": roommates,
-            "rent": rent
+            "rent": rent,
+            "image": image_string
         }
 
         try:
@@ -105,12 +118,43 @@ def login():
             response = requests.post(url, json=payload)
             data = response.json()
 
+            print("Response from Firebase:", data)
+
             if "idToken" in data:
-                session['user_id'] = data['localId']  # Store user ID in session
-                flash("Login successful!")
-                return redirect(url_for('home'))
+                # Get user verification status
+                user_info_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
+                user_payload = {"idToken": data["idToken"]}
+                user_response = requests.post(user_info_url, json=user_payload)
+                user_data = user_response.json()
+
+                if "users" in user_data and len(user_data["users"]) > 0:
+                    user = user_data["users"][0]
+
+                    # Check if email is verified
+                    if user.get("emailVerified", False):
+                        # Store user ID in session
+                        session['user_id'] = data['localId']
+                        flash("Login successful!")
+                        return redirect(url_for('home'))
+                    else:
+                        # Send a new verification email if they didn't verify their email.
+                        verification_url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                        verification_payload = {
+                            "requestType": "VERIFY_EMAIL",
+                            "idToken": data["idToken"]
+                        }
+                        requests.post(verification_url, json=verification_payload)
+
+                        flash(
+                            "Your email is not verified! A new verification email has been sent. Please check your inbox.")
+                        return redirect(url_for('login'))
+                else:
+                    flash("Unable to retrieve user information. Please try again.")
+                    return redirect(url_for('login'))
             else:
-                flash(data.get("error", {}).get("message", "Invalid login credentials"))
+                error_message = data.get("error", {}).get("message", "Invalid login credentials")
+                print("Login error:", error_message)
+                flash(error_message)
                 return redirect(url_for('login'))
 
         except Exception as e:
@@ -140,8 +184,6 @@ def signup():
             return redirect(url_for('signup'))
 
     return render_template('signup.html')
-
-
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
@@ -158,6 +200,33 @@ def get_distance(address):
         return round(distance, 2)
     return None
 
+def image_convert(image):
+    # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
+    MAX_SIZE = 1048487
+    image = Image.open(image)
+    # Ensure that the image is in JPEG format
+    image = image.convert('RGB')
+
+
+    quality = 50
+    # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
+    buffer = BytesIO()
+
+    while quality > 5:
+        # Move pointer to the beginning of buffer and clear out any remaining data
+        buffer.seek(0)
+        buffer.truncate()
+
+        # Save the image to the buffer with the specified quality
+        image.save(buffer, format="JPEG", quality=quality)
+
+        # Encode the image as a base64 string and check if its size is below the limit
+        encoded_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        if len(encoded_string) <= MAX_SIZE:
+            return encoded_string
+
+        # Reduce quality if image string was too large
+        quality -= 5
 
 if __name__ == '__main__':
     app.run(debug=True)
