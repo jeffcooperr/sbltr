@@ -4,15 +4,7 @@ import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "
 import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBWpTLpLRfUoZvS_DMoG_LacJf8Dcm--OU",
-  authDomain: "sbltr-c125d.firebaseapp.com",
-  projectId: "sbltr-c125d",
-  storageBucket: "sbltr-c125d.firebasestorage.app",
-  messagingSenderId: "939786788547",
-  appId: "1:939786788547:web:9ed81752e0658b0bca8c76",
-  measurementId: "G-62CKTQGYKD"
-};
+import { firebaseConfig } from './config.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -113,3 +105,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
