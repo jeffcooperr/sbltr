@@ -44,6 +44,10 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
+
+            address = listing["address"]
+            if ',' in address:
+                listing["address"] = address.split(',')[0]
             listings.append(listing)
 
         return render_template('index.html', listings=listings)
