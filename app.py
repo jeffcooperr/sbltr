@@ -44,12 +44,28 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
+
+            # truncate address to chop off "Burlington ..."
+            address = listing["address"]
+            if ',' in address:
+                listing["address"] = address.split(',')[0]
+
             listings.append(listing)
 
         return render_template('index.html', listings=listings)
 
     return redirect(url_for('login'))
 
+@app.route('/listing/<id>')
+def listing_details(id):
+    doc = db.collection('listings').document(id).get()
+    if doc.exists:
+        listing = doc.to_dict()
+        listing['id'] = doc.id
+        return render_template('listing_details.html', listing=listing)
+    else:
+        flash("Listing not found.")
+        return redirect(url_for('home'))
 
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():    
@@ -61,6 +77,7 @@ def add_listing():
         address = request.form['address']
         roommates = request.form['roommates']
         rent = request.form['rent']
+        semester = request.form.get('semester')
         image = request.form['image']
 
         image_string = image_convert(image)
@@ -85,6 +102,7 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
+            "semester": semester,
             "image": image_string
         }
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>sbltr</title>
+</head>
+<body>
+    <h2>{{ listing.address }}</h2>
+    <img class="details-image" src="data:image/jpeg;base64,{{ listing.image }}" alt="Listing Image">
+    <p> {{ listing.semester }} Semester</p>
+    <p> ${{ listing.rent }}/month</p>
+    <p> {{ listing.roommates }} Roommates</p>
+    <p> {{ listing.distance }} miles from campus</p>
+<a href="{{ url_for('home') }}">Back to Listings</a>
+
+</body>
+
+</html>

@@ -3,22 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>sbltr</title>
 </head>
 <body>
     <h1>Available Housing</h1>
-    <ul>
-        {% for listing in listings %}
-        <li>
-            <figure><img src="data:image/jpeg;base64, {{ listing.image }}" alt="House" width="100px"></figure>
-            <h2>{{ listing.address }}</h2>
-            <p>Distance from Campus: {{ listing.distance }} miles</p>
-            <p># of Roommates: {{ listing.roommates }}</p>
-            <p>Rent: ${{ listing.rent }}</p>
-        </li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('add_listing') }}">Add a Listing</a>
+
+    <nav>
+        <a href="{{ url_for('add_listing') }}" class="btn">Add a Listing</a>
+    </nav>
+
+    <div class="main-container">
+        <div class="listing-container">
+            {% for listing in listings %}
+            <div class="card">
+                <h2 class="card-title">{{ listing.address }}</h2>
+                <figure><img src="data:image/jpeg;base64, {{ listing.image }}" alt="House" class="card-img"></figure>
+                <div class="card-body">
+                    <p class="card-text"> {{ listing.semester }} Semester</p>
+                    <p class="card-text"> ${{ listing.rent }}/month</p>
+                    <p class="card-text"> {{ listing.roommates }} Roommates</p>
+                    <p class="card-text"> {{ listing.distance }} miles from campus</p>
+                    <a href="{{ url_for('listing_details', id=listing.id) }}">
+                        <button>More details</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="map-container">
+            <p>map placeholder</p>
+        </div>
+    </div>
     <!-- Temp -->
     <p><a href="{{ url_for('login') }}">Go back to login</a></p>
 </body>

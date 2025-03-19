@@ -1,0 +1,87 @@
+* {
+    font-family: Helvetica;
+    box-sizing: border-box;
+
+}
+
+nav{
+    margin: 25px;
+}
+
+.main-container{
+    display: flex;
+    gap: 20px;
+}
+
+.listing-container {
+    display: grid;
+    grid-template: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    border: 1px solid black;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    background-color: #f4f4f4;
+}
+.card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; 
+    border-radius: 8px;
+}
+
+.map-container {
+    background-color: #f4f4f4;
+    border: 1px solid black;
+    padding: 20px;
+    border-radius: 8px;
+    height: 600px;
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 5px solid #ccc;
+    border-radius: 8px;
+    text-decoration: none;
+    color: black;
+}
+
+.btn:hover {
+    background-color: #ccc;
+}
+
+.signup-login{
+    border-radius: 8px;
+    border: 5px solid grey;
+    background-color: #f4f4f4;
+    margin: auto;
+    width: 30%;
+    text-align: center;
+    margin-top: 10%;
+}
+
+.signup-login button{
+    padding: 10px;
+    border-radius: 2px;
+}
+
+input[type="email"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.details-image {
+    width: 20%;
+}

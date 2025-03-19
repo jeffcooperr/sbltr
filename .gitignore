@@ -1,6 +1,10 @@
 # firebase auth credentials
 config.js
 
+# images
+*.HEIC
+*.jpeg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

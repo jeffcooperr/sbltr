@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Listing</title>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Add a New Listing</h1>
@@ -28,6 +29,14 @@
 
         <label for="rent">Rent ($):</label>
         <input type="number" id="rent" name="rent" required><br><br>
+
+        <label for="semester">Semester:</label>
+        <select id="semester" name="semester" required>
+            <option value="" disabled selected>Select a semester</option>
+            <option value="Summer 2025">Summer 2025</option>
+            <option value="Fall 2025">Fall 2025</option>
+            <option value="Spring 2026">Spring 2026</option>
+        </select><br><br>    
 
         <!-- We may want people to upload more than one file?-->
         <label for="image">Upload Image:</label>
