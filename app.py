@@ -24,8 +24,17 @@ FIREBASE_WEB_API_KEY = os.getenv('FIREBASE_WEB_API_KEY')
 # Google API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
+# Firebase config
+FIREBASE_CONFIG_KEY = os.getenv('FIREBASE_CONFIG_KEY')
+FIREBASE_AUTH_DOMAIN = os.getenv('FIREBASE_AUTH_DOMAIN')
+FIREBASE_PROJECT_ID = os.getenv('FIREBASE_PROJECT_ID')
+FIREBASE_STORAGE_BUCKET = os.getenv('FIREBASE_STORAGE_BUCKET')
+FIREBASE_MESSAGING_SENDER_ID = os.getenv('FIREBASE_MESSAGING_SENDER_ID')
+FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
+FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
+
 # Initialize Firestore
-cred = credentials.Certificate('path')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -44,13 +53,9 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
-
-            address = listing["address"]
-            if ',' in address:
-                listing["address"] = address.split(',')[0]
             listings.append(listing)
 
-        return render_template('index.html', listings=listings)
+        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY)
 
     return redirect(url_for('login'))
 
@@ -187,7 +192,14 @@ def signup():
             flash(f"Error signing up: {str(e)}")
             return redirect(url_for('signup'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', firebase_config_key=FIREBASE_CONFIG_KEY,
+                                            firebase_auth_domain=FIREBASE_AUTH_DOMAIN,
+                                            firebase_project_id=FIREBASE_PROJECT_ID,
+                                            firebase_storage_bucket=FIREBASE_STORAGE_BUCKET,
+                                            firebase_messaging_sender_id=FIREBASE_MESSAGING_SENDER_ID,
+                                            firebase_measurement_id=FIREBASE_MEASUREMENT_ID,
+                                            firebase_app_id=FIREBASE_APP_ID)
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
