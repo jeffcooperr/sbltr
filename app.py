@@ -53,6 +53,17 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
+
+            full_address = listing["address"]
+            listing["display_address"] = full_address.split(',')[0]
+            
+            # get coordinates
+            geolocator = Nominatim(user_agent="sublet")
+            location = geolocator.geocode(full_address)
+            if location:
+                listing["latitude"] = location.latitude
+                listing["longitude"] = location.longitude
+
             listings.append(listing)
 
         return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY)
