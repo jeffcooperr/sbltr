@@ -32,33 +32,31 @@
         <div class="container">
             {% if listings and favorites != [] %}
                 {% for listing in listings %}
-                    {% for favorite in favorites %}
-                        {% if listing.id == favorite %}
-                            <div class="card">
-                                {% if listing.image|length > 1 %}
-                                    <section id="image-carousel-{{ loop.index }}" class="splide">
-                                        <div class="splide__track">
-                                            <ul class="splide__list">
-                                                {% for image in listing.image %}
-                                                <li class="splide__slide">
-                                                    <img src="data:image/jpeg;base64, {{ image }}" alt="House" width="100px">
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </section>
-                                {% else %}
-                                    <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px">
-                                {% endif %}
-                                <div class="card-content">
-                                    <h2>{{ listing.address }}</h2>
-                                    <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
-                                    <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
-                                    <p><strong>Rent:</strong> ${{ listing.rent }}</p>
-                                </div>
+                    {% if listing.id in favorites %}
+                        <div class="card">
+                            {% if listing.image|length > 1 %}
+                                <section id="image-carousel-{{ loop.index }}" class="splide">
+                                    <div class="splide__track">
+                                        <ul class="splide__list">
+                                            {% for image in listing.image %}
+                                            <li class="splide__slide">
+                                                <img src="data:image/jpeg;base64, {{ image }}" alt="House" width="100px">
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </section>
+                            {% else %}
+                                <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px">
+                            {% endif %}
+                            <div class="card-content">
+                                <h2>{{ listing.address }}</h2>
+                                <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
+                                <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
+                                <p><strong>Rent:</strong> ${{ listing.rent }}</p>
                             </div>
-                        {% endif %}
-                    {% endfor %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% else %}
                 <p>No favorites yet.</p>

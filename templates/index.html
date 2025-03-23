@@ -12,6 +12,8 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&callback=initMap" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
     <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
+    
+    <!-- For the carousel element -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.splide').forEach(carousel => {
@@ -21,6 +23,21 @@
                     rewind: true
                 }).mount();
             });
+        });
+    </script>
+    
+    <!-- Tracks the position of the window and restores the position when the page reloads -->
+    <script>
+        window.addEventListener("beforeunload", function () {
+            sessionStorage.setItem("scrollPosition", window.scrollY);
+        });
+    
+        window.addEventListener("load", function () {
+            let scrollPosition = sessionStorage.getItem("scrollPosition");
+            if (scrollPosition !== null) {
+                window.scrollTo(0, scrollPosition);
+                sessionStorage.removeItem("scrollPosition");
+            }
         });
     </script>
 </head>
@@ -57,6 +74,19 @@
                         <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
                         <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
                         <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                        {% if listing.id in favorites %}
+                            <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
+                                <button type="submit" class="in-favorites">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('add_favorite', listing=listing.id) }}" method="POST">
+                                <button type="submit" class="out-favorites">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
