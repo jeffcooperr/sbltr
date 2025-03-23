@@ -42,7 +42,7 @@
                             </div>
                         </section>
                     {% else %}
-                        <figure><img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px"></figure>
+                        <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px">
                     {% endif %}
                     <div class="card-content">
                         <h2>{{ listing.address }}</h2>
