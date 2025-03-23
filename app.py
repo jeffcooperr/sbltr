@@ -213,7 +213,23 @@ def logout():
 
 @app.route('/favorites')
 def favorites():
-    return render_template('favorites.html')
+    if 'user_id' in session:
+        # Fetch housing listings from Firestore
+        listings_ref = db.collection("listings")
+        docs = listings_ref.stream()
+
+        listings = []
+        for doc in docs:
+            listing = doc.to_dict()
+            listing["id"] = doc.id  # Store the document ID
+            listings.append(listing)
+
+        user_ref = db.collection("users").document(session['user_id'])  # Get user's document
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict()
+        favorites = user_data.get('favorites', [])
+
+        return render_template('favorites.html', listings=listings, favorites=favorites)
 
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
