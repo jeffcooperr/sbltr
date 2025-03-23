@@ -6,14 +6,15 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-var campus = L.circle([44.47789316989897, -73.19630194470729], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 50
-}).addTo(map);
+// var campus = L.circle([44.47789316989897, -73.19630194470729], {
+//     color: 'red',
+//     fillColor: '#f03',
+//     fillOpacity: 0.3,
+//     opacity: 0.3,
+//     radius: 150
+// }).addTo(map);
 
-campus.bindPopup(`UVM Central Campus`)
+// campus.bindPopup(`UVM Central Campus`)
 
 const listings = document.querySelectorAll('.card');
 
