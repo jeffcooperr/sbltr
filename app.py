@@ -70,9 +70,14 @@ def add_listing():
         address = request.form['address']
         roommates = request.form['roommates']
         rent = request.form['rent']
-        image = request.form['image']
+        image = request.files.getlist('image')
+        
+        # Convert all uploaded images to base64 encoded strings
+        image_list = []
+        for i in image:
+            image_string = image_convert(i)
+            image_list.append(image_string)
 
-        image_string = image_convert(image)
 
         #calculate distance automatically
         distance = get_distance(address)
@@ -94,7 +99,7 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
-            "image": image_string
+            "image": image_list
         }
 
         try:
