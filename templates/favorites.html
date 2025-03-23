@@ -4,9 +4,65 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Favorites</title>
-
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+        <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.splide').forEach(carousel => {
+                    new Splide(carousel, {
+                        type: 'loop',
+                        perPage: 1,
+                        rewind: true
+                    }).mount();
+                });
+            });
+        </script>
     </head>
     <body>
-        
+        <header>
+            <h1>Favorites</h1>
+            <p>
+                <a href="{{ url_for('favorites') }}" class="favorites">
+                    <i class="fa-solid fa-heart"></i>
+                </a>
+            </p>
+        </header>
+        <div class="container">
+            {% if listings and favorites != [] %}
+                {% for listing in listings %}
+                    {% for favorite in favorites %}
+                        {% if listing.id == favorite %}
+                            <div class="card">
+                                {% if listing.image|length > 1 %}
+                                    <section id="image-carousel-{{ loop.index }}" class="splide">
+                                        <div class="splide__track">
+                                            <ul class="splide__list">
+                                                {% for image in listing.image %}
+                                                <li class="splide__slide">
+                                                    <img src="data:image/jpeg;base64, {{ image }}" alt="House" width="100px">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </section>
+                                {% else %}
+                                    <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px">
+                                {% endif %}
+                                <div class="card-content">
+                                    <h2>{{ listing.address }}</h2>
+                                    <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
+                                    <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
+                                    <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>No favorites yet.</p>
+            {% endif %}
+        </div>
     </body>
 </html>
