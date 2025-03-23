@@ -58,6 +58,29 @@ body {
    color: #555;
 }
 
+header {
+   position: relative;
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.favorites {
+   position: absolute;
+   top: 50%;
+   right: 0px;
+   transform: translateY(-50%);
+   background: none;
+   border: none;
+   padding: 0;
+   cursor: pointer;
+   font-size: 20px;
+   color: black;
+}
+
+.favorites:hover {
+   color: lightblue;
+}
+
 #map {
    height: 400px; /* The height is 400 pixels */
    width: 100%; /* The width is the width of the web page */

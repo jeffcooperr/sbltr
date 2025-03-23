@@ -211,6 +211,10 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
+@app.route('/favorites')
+def favorites():
+    return render_template('favorites.html')
+
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
 def get_distance(address):
@@ -222,6 +226,7 @@ def get_distance(address):
         distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
         return round(distance, 2)
     return None
+    
 
 def image_convert(image):
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
