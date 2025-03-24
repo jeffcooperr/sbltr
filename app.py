@@ -255,7 +255,6 @@ def add_favorite(listing):
     if listing not in favorites:
         favorites.append(listing)
         user_ref.update({"favorites": favorites})
-    # return "Listing added to favorites", 204
     return redirect(request.referrer)
 
 @app.route('/delete_favorite/<listing>', methods=['POST'])
@@ -272,7 +271,6 @@ def delete_favorite(listing):
             favorites.remove(favorite)
 
     user_ref.update({"favorites": favorites})
-    # return "Listing deleted from favorites", 204
     return redirect(request.referrer)
 
 # Should edit this at some point so that user can enter city, state, country
