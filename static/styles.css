@@ -34,6 +34,7 @@ body {
    transition: var(--transition);
    width: 100%;
    min-height: 350px;
+   cursor: pointer;
 }
 
 .card:hover {
@@ -77,4 +78,16 @@ body {
    height: calc(100vh - 180px);
    padding-left: 10px;
    margin: 0;
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+.card-link:hover {
+    text-decoration: none;
+}
+
+.details-content img {
+   height: 200px;
 }

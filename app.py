@@ -79,6 +79,7 @@ def add_listing():
 
     if request.method == 'POST':
         address = request.form['address']
+        semester = request.form['semester']
         roommates = request.form['roommates']
         rent = request.form['rent']
         image = request.files.getlist('image')
@@ -88,14 +89,6 @@ def add_listing():
         for i in image:
             image_string = image_convert(i)
             image_list.append(image_string)
-
-
-        #calculate distance automatically
-        distance = get_distance(address)
-
-        if distance is None:
-            flash("Could not determine distance")
-            return redirect(url_for('add_listing'))
 
         #calculate distance automatically
         distance = get_distance(address)
@@ -107,6 +100,7 @@ def add_listing():
         new_listing = {
             "user_id": session['user_id'],
             "address": address,
+            "semester": semester,
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
@@ -261,6 +255,24 @@ def image_convert(image):
 
         # Reduce quality if image string was too large
         quality -= 5
+
+@app.route('/listing/<listing_id>')
+def listing_details(listing_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    listing_doc = db.collection("listings").document(listing_id).get()
+    
+    if not listing_doc.exists:
+        flash("Listing not found")
+        return redirect(url_for('home'))
+        
+    listing = listing_doc.to_dict()
+    listing["id"] = listing_doc.id
+    
+    listing["display_address"] = listing["address"].split(',')[0]
+    
+    return render_template('listing_details.html', listing=listing)
 
 if __name__ == '__main__':
     app.run(debug=True)

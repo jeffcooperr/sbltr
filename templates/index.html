@@ -34,32 +34,35 @@
         <div class="card-container">
             {% if listings %}
                 {% for listing in listings %}
-                    <div class="card"
-                        data-lat="{{ listing.latitude }}" 
-                        data-lng="{{ listing.longitude }}">
-                
-                        {% if listing.image|length > 1 %}
-                            <section id="image-carousel-{{ loop.index }}" class="splide">
-                                <div class="splide__track">
-                                    <ul class="splide__list">
-                                        {% for image in listing.image %}
-                                        <li class="splide__slide">
-                                            <img src="data:image/jpeg;base64, {{ image }}" alt="House">
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </section>
-                        {% else %}
-                            <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
-                        {% endif %}
-                        <div class="card-content">
-                            <h2>{{ listing.display_address }}</h2>
-                            <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
-                            <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
-                            <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                    <a href="{{ url_for('listing_details', listing_id=listing.id) }}" class="card-link">
+                        <div class="card"
+                            data-lat="{{ listing.latitude }}" 
+                            data-lng="{{ listing.longitude }}">
+                        
+                            {% if listing.image|length > 1 %}
+                                <section id="image-carousel-{{ loop.index }}" class="splide">
+                                    <div class="splide__track">
+                                        <ul class="splide__list">
+                                            {% for image in listing.image %}
+                                            <li class="splide__slide">
+                                                <img src="data:image/jpeg;base64, {{ image }}" alt="House">
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </section>
+                            {% else %}
+                                <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
+                            {% endif %}
+                            <div class="card-content">
+                                <h2>{{ listing.display_address }}</h2>
+                                <p><strong>Semester:</strong> {{ listing.semester }}</p>
+                                <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
+                                <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
+                                <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             {% else %}
                 <p>No listings Available.</p>

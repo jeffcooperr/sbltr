@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Splide('.splide', {
+                type: 'loop',
+                perPage: 1,
+                rewind: true
+            }).mount();
+        });
+    </script>
+</head>
+<body>
+    <div class="details-container">
+        <div class="details-content">
+            <h1>{{ listing.display_address }}</h1>
+            
+            {% if listing.image|length > 1 %}
+                <section class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            {% for image in listing.image %}
+                            <li class="splide__slide">
+                                <img src="data:image/jpeg;base64, {{ image }}" alt="House">
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </section>
+            {% else %}
+                <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
+            {% endif %}
+
+            <div class="details-info">
+                <p><strong>Full Address:</strong> {{ listing.address }}</p>
+                <p><strong>Semester:</strong> {{ listing.semester }}</p>
+                <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
+                <p><strong>Number of Roommates:</strong> {{ listing.roommates }}</p>
+                <p><strong>Monthly Rent:</strong> ${{ listing.rent }}</p>
+            </div>
+
+            <div class="details-actions">
+                <a href="{{ url_for('home') }}" class="button">Back to Listings</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
