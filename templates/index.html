@@ -16,6 +16,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <!-- Splide CSS for image carousel -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
+    
+    <!-- For the carousel element -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.splide').forEach(carousel => {
@@ -27,9 +30,31 @@
             });
         });
     </script>
+    
+    <!-- Tracks the position of the window and restores the position when the page reloads -->
+    <script>
+        window.addEventListener("beforeunload", function () {
+            sessionStorage.setItem("scrollPosition", window.scrollY);
+        });
+    
+        window.addEventListener("load", function () {
+            let scrollPosition = sessionStorage.getItem("scrollPosition");
+            if (scrollPosition !== null) {
+                window.scrollTo(0, scrollPosition);
+                sessionStorage.removeItem("scrollPosition");
+            }
+        });
+    </script>
 </head>
 <body>
-    <h1>Available Listings</h1>
+    <header>
+        <h1>Available Listings</h1>
+        <p>
+            <a href="{{ url_for('favorites') }}" class="favorites">
+                <i class="fa-solid fa-heart"></i>
+            </a>
+        </p>
+    </header>
     <div class="page-layout">
         <div class="card-container">
             {% if listings %}
@@ -60,6 +85,19 @@
                                 <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
                                 <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
                                 <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                        {% if listing.id in favorites %}
+                            <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
+                                <button type="submit" class="in-favorites">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('add_favorite', listing=listing.id) }}" method="POST">
+                                <button type="submit" class="out-favorites">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </form>
+                        {% endif %}
                             </div>
                         </div>
                     </a>

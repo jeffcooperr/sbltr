@@ -66,7 +66,13 @@ def home():
 
             listings.append(listing)
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY)
+        # Fetch user's favorites list
+        user_ref = db.collection("users").document(session['user_id'])
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict()
+        favorites = user_data.get('favorites', [])
+
+        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
 
     return redirect(url_for('login'))
 
@@ -216,6 +222,59 @@ def logout():
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
+@app.route('/favorites')
+def favorites():
+    if 'user_id' in session:
+        # Fetch housing listings from Firestore
+        listings_ref = db.collection("listings")
+        docs = listings_ref.stream()
+
+        listings = []
+        for doc in docs:
+            listing = doc.to_dict()
+            listing["id"] = doc.id
+            listings.append(listing)
+
+        # Fetch user's favorites list
+        user_ref = db.collection("users").document(session['user_id'])
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict()
+        favorites = user_data.get('favorites', [])
+
+        return render_template('favorites.html', listings=listings, favorites=favorites)
+
+@app.route('/add_favorite/<listing>', methods=['POST'])
+def add_favorite(listing):
+    # Retrieve current favorites list
+    user_ref = db.collection("users").document(session['user_id'])
+    user_doc = user_ref.get()
+    user_data = user_doc.to_dict()
+    favorites = user_data.get('favorites', [])
+
+    # Add new listing to list (if not repeated)
+    if listing not in favorites:
+        favorites.append(listing)
+        user_ref.update({"favorites": favorites})
+    # return "Listing added to favorites", 204
+    return redirect(request.referrer)
+
+@app.route('/delete_favorite/<listing>', methods=['POST'])
+def delete_favorite(listing):
+    # Retrieve current favorites list
+    user_ref = db.collection("users").document(session['user_id'])
+    user_doc = user_ref.get()
+    user_data = user_doc.to_dict()
+    favorites = user_data.get('favorites', [])
+
+    # Add new listing to list (if not repeated)
+    for favorite in favorites:
+        if favorite == listing:
+            favorites.remove(favorite)
+
+    user_ref.update({"favorites": favorites})
+    # return "Listing deleted from favorites", 204
+    return redirect(request.referrer)
+
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
 def get_distance(address):
@@ -227,6 +286,7 @@ def get_distance(address):
         distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
         return round(distance, 2)
     return None
+    
 
 def image_convert(image):
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
