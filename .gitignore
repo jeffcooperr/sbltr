@@ -1,6 +1,9 @@
 # firebase auth credentials
 config.js
 
+# leaflet routing machine
+static/leaflet-routing-machine-3.2.12/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
