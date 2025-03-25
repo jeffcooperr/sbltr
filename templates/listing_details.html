@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet Routing Machine -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css') }}" />
+    <script src="{{ url_for('static', filename='leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js') }}"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             new Splide('.splide', {
@@ -19,40 +25,66 @@
             }).mount();
         });
     </script>
+    <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="details-container">
-        <div class="details-content">
-            <h1>{{ listing.display_address }}</h1>
-            
-            {% if listing.image|length > 1 %}
-                <section class="splide">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            {% for image in listing.image %}
-                            <li class="splide__slide">
-                                <img src="data:image/jpeg;base64, {{ image }}" alt="House">
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </section>
-            {% else %}
-                <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
-            {% endif %}
+    <div class="page-layout">
+        <div class="details-container">
+            <div class="details-content" 
+                data-lat="{{ listing.latitude }}" 
+                data-lng="{{ listing.longitude }}"
+                data-address="{{ listing.display_address }}"
+                data-rent="{{ listing.rent }}">
+                <h1>{{ listing.display_address }}</h1>
+                
+                {% if listing.image|length > 1 %}
+                    <section class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                {% for image in listing.image %}
+                                <li class="splide__slide">
+                                    <img src="data:image/jpeg;base64, {{ image }}" alt="House">
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </section>
+                {% else %}
+                    <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
+                {% endif %}
 
-            <div class="details-info">
-                <p><strong>Full Address:</strong> {{ listing.address }}</p>
-                <p><strong>Semester:</strong> {{ listing.semester }}</p>
-                <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
-                <p><strong>Number of Roommates:</strong> {{ listing.roommates }}</p>
-                <p><strong>Monthly Rent:</strong> ${{ listing.rent }}</p>
-            </div>
+                <div class="details-info">
+                    <p><strong>${{ listing.rent }}/month - {{ listing.semester }}</strong></p>
+                    <p><strong>{{ listing.roommates }} roommates</strong></p>
+                    <p><strong>Contact:</strong> <a href="mailto:{{ listing.poster_email }}">{{ listing.poster_email }}</a></p>
+                </div>
 
-            <div class="details-actions">
-                <a href="{{ url_for('home') }}" class="button">Back to Listings</a>
+                <div class="transport-toggle">
+                    <button id="walkBtn" class="transport-button active">
+                        <i class="fa-solid fa-person-walking"></i>
+                    </button>
+                    <button id="bikeBtn" class="transport-button">
+                        <i class="fa-solid fa-bicycle"></i>
+                    </button>
+                    <button id="driveBtn" class="transport-button">
+                        <i class="fa-solid fa-car"></i>
+                    </button>
+                </div>
+
+                <div class="route-info">
+                    <p><span id="transport-icon"><i class="fa-solid fa-person-walking"></i></span> <span id="travel-info">Calculating...</span></p>
+                </div>
+
             </div>
         </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
     </div>
+
+    <!-- Add Google Maps Distance Matrix API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=geometry"></script>
+    <script src="{{ url_for('static', filename='details_map.js') }}"></script>
 </body>
 </html>

@@ -80,6 +80,18 @@ header {
    position: relative;
    max-width: 1200px;
    margin: 0 auto;
+   text-align: left;
+}
+
+header h1 {
+   display: inline-block;
+}
+
+header p {
+   padding-top: 40px;
+   display: inline-block;
+   float: right;
+   margin: 0;
 }
 
 .favorites {
@@ -146,6 +158,99 @@ header {
     text-decoration: none;
 }
 
+.details-container {
+    text-align: left;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .details-content img {
-   height: 200px;
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.details-info {
+    margin: 20px 0;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 14px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.route-info {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.route-info p {
+    margin: 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.route-info i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.transport-toggle {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.transport-button {
+    padding: 10px 20px;
+    border: 1px solid #007bff;
+    background: white;
+    color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transport-button:hover {
+    background: #e6f0ff;
+}
+
+.transport-button.active {
+    background: #007bff;
+    color: white;
+}
+
+.leaflet-routing-container {
+    display: none;
 }

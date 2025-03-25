@@ -328,9 +328,24 @@ def listing_details(listing_id):
     listing = listing_doc.to_dict()
     listing["id"] = listing_doc.id
     
+    # get email
+    poster_id = listing["user_id"]
+    user_doc = db.collection("users").document(poster_id).get()
+    if user_doc.exists:
+        listing["poster_email"] = user_doc.to_dict().get("email")
+    else:
+        listing["poster_email"] = "Email not available"
+    
     listing["display_address"] = listing["address"].split(',')[0]
     
-    return render_template('listing_details.html', listing=listing)
+    # Add coordinates for the map
+    geolocator = Nominatim(user_agent="sublet")
+    location = geolocator.geocode(listing["address"])
+    if location:
+        listing["latitude"] = location.latitude
+        listing["longitude"] = location.longitude
+    
+    return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
 
 if __name__ == '__main__':
     app.run(debug=True)
