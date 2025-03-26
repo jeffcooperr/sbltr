@@ -54,9 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Password validation
-      // TODO: Add more password requirements. - Bella
-      if (password.length < 6) {
+
+      // Password requirements
+      const minLength = 6;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasDigit = /\d/.test(password);
+      const hasSpecialChars = /[!@#$%^&*]/.test(password);
+
+      if (password.length < minLength) {
         showMessage('Password must be at least 6 characters long!', 'signUpMessage');
+        return;
+      }
+
+      if (!hasUpperCase || !hasLowerCase) {
+        showMessage('Password must consist of both uppercase and lowercase letters!', 'signUpMessage');
+        return;
+      }
+
+      if (!hasDigit){
+        showMessage('Password must contain at least one Digit!', 'signUpMessage');
+        return;
+      }
+
+      if (!hasSpecialChars){
+        showMessage('Password must contain at least one special character!', 'signUpMessage');
         return;
       }
 

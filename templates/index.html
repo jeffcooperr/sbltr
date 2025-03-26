@@ -27,6 +27,15 @@
                     perPage: 1,
                     rewind: true
                 }).mount();
+
+                // prevents clicks on the arrows from triggering the details page
+                const arrows = carousel.querySelectorAll('.splide__arrow');
+                arrows.forEach(arrow => {
+                    arrow.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
             });
         });
     </script>
@@ -50,8 +59,13 @@
     <header>
         <h1>Available Listings</h1>
         <p>
-            <a href="{{ url_for('favorites') }}" class="favorites">
+            <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-plus"></i>
+                <span class="tooltiptext">Add a Listing</span>
+            </a>
+            <a href="{{ url_for('favorites') }}" class="favorites tooltip">
                 <i class="fa-solid fa-heart"></i>
+                <span class="tooltiptext">Favorites</span>
             </a>
         </p>
     </header>
@@ -65,7 +79,7 @@
                             data-lng="{{ listing.longitude }}">
                         
                             {% if listing.image|length > 1 %}
-                                <section id="image-carousel-{{ loop.index }}" class="splide">
+                                <section id="image-carousel-{{ loop.index }}" class="splide" onclick="event.stopPropagation()">
                                     <div class="splide__track">
                                         <ul class="splide__list">
                                             {% for image in listing.image %}
@@ -81,24 +95,22 @@
                             {% endif %}
                             <div class="card-content">
                                 <h2>{{ listing.display_address }}</h2>
-                                <p><strong>Semester:</strong> {{ listing.semester }}</p>
-                                <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
-                                <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
-                                <p><strong>Rent:</strong> ${{ listing.rent }}</p>
-                        {% if listing.id in favorites %}
-                            <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
-                                <button type="submit" class="in-favorites">
-                                    <i class="fa-solid fa-heart"></i>
-                                </button>
-                            </form>
-                        {% else %}
-                            <form action="{{ url_for('add_favorite', listing=listing.id) }}" method="POST">
-                                <button type="submit" class="out-favorites">
-                                    <i class="fa-solid fa-heart"></i>
-                                </button>
-                            </form>
-                        {% endif %}
+                                <p><strong>${{ listing.rent }}/month</strong> - {{ listing.semester }}</p>
+                                <p><strong>{{ listing.roommates }}</strong> Roommates</p>
                             </div>
+                            {% if listing.id in favorites %}
+                                <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
+                                    <button type="submit" class="in-favorites">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{ url_for('add_favorite', listing=listing.id) }}" method="POST">
+                                    <button type="submit" class="out-favorites">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
                     </a>
                 {% endfor %}
@@ -114,7 +126,6 @@
 
     <script src="{{ url_for('static', filename='map.js') }}"></script>
 
-    <a href="{{ url_for('add_listing') }}">Add a Listing</a>
     <!-- Temp -->
     <p><a href="{{ url_for('login') }}">Go back to login</a></p>
 </body>

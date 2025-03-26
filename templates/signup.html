@@ -27,6 +27,7 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
 
+        <button id="generatePassword" type="button">Generate Strong Password</button>
         <button id ="submitSignUp" type="submit">Sign Up</button>
     </form>
 
@@ -45,6 +46,68 @@
         const FIREBASE_MEASUREMENT_ID = "{{ firebase_measurement_id }}";
         const FIREBASE_APP_ID = "{{ firebase_app_id }}";
     </script>
+
+    <script>
+        function generateStrongPassword(){
+            // Length of password will be between 6 - 25 characters in length.
+            const length = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
+
+            const upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+            const digit = "0123456789";
+            const specialCharacters = "!@#$%^&*()_+=-`~[]\\{}|;':\",./<>?";
+
+            // One uppercase letter
+            const randomUpper = upperCaseLetters.charAt(Math.floor(Math.random() * upperCaseLetters.length));
+            // One lowercase letter
+            const randomLower = lowerCaseLetters.charAt(Math.floor(Math.random() * lowerCaseLetters.length));
+            // One digit
+            const randomDigit = digit.charAt(Math.floor(Math.random() * digit.length));
+            // One special character
+            const randomSpecialChar = specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length));
+
+            let password = randomUpper + randomUpper + randomDigit + randomSpecialChar;
+
+            const allCharacters = upperCaseLetters + lowerCaseLetters + digit + specialCharacters;
+
+            // fill in the rest of the password with random characters
+            for (let i = 4; i < length; i++){
+                const randomIndex = Math.floor(Math.random() * allCharacters.length);
+                password += allCharacters.charAt(randomIndex);
+            }
+
+            // shuffle the password
+            var arr = password.split('');
+            var n = arr.length;
+
+            for (var i = 0; i < n - 1; ++i){
+                var j = Math.floor(Math.random() * n);
+
+                var temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+
+            password = arr.join('')
+
+            // set the password in the input field.
+            document.getElementById('password').value = password;
+
+            // TODO: Either print the strong password out on screen or add a view feature to the password text box
+
+            return password;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Attach click event to the generate password button
+            document.getElementById('generatePassword').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent form submission
+                generateStrongPassword();
+            });
+        });
+
+    </script>
+
     <script type="module" src = "../static/firebaseauth.js"></script>
 </body>
 </html>
