@@ -89,6 +89,7 @@ def add_listing():
         roommates = request.form['roommates']
         rent = request.form['rent']
         image = request.files.getlist('image')
+        description = request.form['description']
         
         # Convert all uploaded images to base64 encoded strings
         image_list = []
@@ -110,6 +111,7 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
+            "description": description,
             "image": image_list
         }
 

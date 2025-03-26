@@ -56,6 +56,12 @@
                 <div class="details-info">
                     <p><strong>${{ listing.rent }}/month - {{ listing.semester }}</strong></p>
                     <p><strong>{{ listing.roommates }} roommates</strong></p>
+                {% if listing.description %}
+                    <div class="listing-description">
+                        <strong>Description:</strong>
+                        <p>{{ listing.description }}</p>
+                    </div>
+                {% endif %}
                     <p><strong>Contact:</strong> <a href="mailto:{{ listing.poster_email }}">{{ listing.poster_email }}</a></p>
                 </div>
 
