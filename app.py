@@ -34,17 +34,23 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Anchor Point for central campus
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
+        # Get filter inputs
+        max_distance = request.args.get("max_distance", type=float)
+        max_rent = request.args.get("max_rent", type=float)
+        roommates = request.args.get("roommates", type=int)
+        semester = request.args.get("semester")
+
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
         docs = listings_ref.stream()
@@ -63,7 +69,17 @@ def home():
             if location:
                 listing["latitude"] = location.latitude
                 listing["longitude"] = location.longitude
-
+            
+            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+                continue
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+                continue
+            if roommates is not None and listing.get("roommates") != roommates:
+                continue
+            # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
+            #if semester is not None and listing.get("semester") != semester:
+                #continue
+            
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -76,7 +92,6 @@ def home():
 
     return redirect(url_for('login'))
 
-
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():    
     if 'user_id' not in session:
@@ -86,8 +101,14 @@ def add_listing():
     if request.method == 'POST':
         address = request.form['address']
         semester = request.form['semester']
-        roommates = request.form['roommates']
-        rent = request.form['rent']
+
+        try:
+            roommates = int(request.form['roommates'])
+            rent = int(request.form['rent'])
+        except ValueError:
+            flash("Rent and number of roommates must be valid numbers")
+            return redirect(url_for('add_listing'))
+        
         image = request.files.getlist('image')
         
         # Convert all uploaded images to base64 encoded strings
