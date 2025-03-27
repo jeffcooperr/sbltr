@@ -275,12 +275,12 @@ def add_favorite(listing):
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
     user_data = user_doc.to_dict()
-    favorites = user_data.get('favorites', [])
+    user_favorites = user_data.get('favorites', [])
 
     # Add new listing to list (if not repeated)
-    if listing not in favorites:
-        favorites.append(listing)
-        user_ref.update({"favorites": favorites})
+    if listing not in user_favorites:
+        user_favorites.append(listing)
+        user_ref.update({"favorites": user_favorites})
     return redirect(request.referrer)
 
 @app.route('/delete_favorite/<listing>', methods=['POST'])
@@ -290,14 +290,14 @@ def delete_favorite(listing):
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
     user_data = user_doc.to_dict()
-    favorites = user_data.get('favorites', [])
+    user_favorites = user_data.get('favorites', [])
 
     # Add new listing to list (if not repeated)
-    for favorite in favorites:
+    for favorite in user_favorites:
         if favorite == listing:
-            favorites.remove(favorite)
+            user_favorites.remove(favorite)
 
-    user_ref.update({"favorites": favorites})
+    user_ref.update({"favorites": user_favorites})
     return redirect(request.referrer)
 
 # Should edit this at some point so that user can enter city, state, country
