@@ -22,7 +22,7 @@ We have created a client/server system that serves as a social platform for coll
 
 <div style="font-size: 1em;">
   <ol>
-    <li>Clone the following repository in terminal or in a preferred IDE: <a href="https://github.com/jeffcooperr/sbltr.git">https://github.com/jeffcooperr/sbltr.git</a></li>
+    <li>Clone the following repository in your terminal or in a preferred IDE: <a href="https://github.com/jeffcooperr/sbltr.git">https://github.com/jeffcooperr/sbltr.git</a></li>
     <li>Create a file named <code>sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json</code> in the folder <code>sbltr</code> with the following contents:</li>
   </ol>
   <a>Note: One of our team members will give you the correct credentials if you are meant to have access.</a>
@@ -70,16 +70,16 @@ We have created a client/server system that serves as a social platform for coll
 <p>To access the website, you will need to create an account or login to an already existing account.</p>
 <p>To create an account follow these steps:</p>
 <ol>
-    <li>On the login page click "Sign up".</li>
-    <li>Enter in a valid UVM email address. Your account will not be successfully created if you aren't able to verify your email via a link (which will not be sent to an invalid email address or a none @uvm.edu address).</li>
-    <li>Enter in a strong password or generate one by clicking "Generate Strong Password".
-    <br> - The password must be at least 6 characters long, contain both uppercase and lowercase letters, one special character, and one digit. 
+    <li>On the login page, click "Sign Up".</li>
+    <li>Enter a valid UVM email address. Your account will not be successfully created if you cannot verify your email via a link (which will not be sent to an invalid email address or a non @uvm.edu address).</li>
+    <li>Enter a strong password or generate one by clicking "Generate Strong Password".
+    <br> - The password must be at least six characters long and contain both uppercase and lowercase letters, one special character, and one digit. 
     </li>
-    <li>Click "Sign Up"</li>
-    <li>You should receive a verification email in the mailbox of the email you signed up with. Click the link in this email.</li>
-    <li>You will be brought to a page that says your email has been successfully verified if the verification works, click "continue".</li>
-    <li>Clicking continue should bring you to the login page. In the login page, sign into your account by entering your email and password for the account you just created and click "Log In".</li>
-    <li>Once logged in, you will be brought to the sites home page which is where users can view and favorite listings, their locations on a map, and add listings.</li>
+    <li>Click "Sign Up".</li>
+    <li>You should receive a verification email in the mailbox of the email address you signed up with. Click the link in this email.</li>
+    <li>If the verification is successful, you will be brought to a page confirming that your email has been successfully verified. Click "Continue".</li>
+    <li>Clicking "Continue" should bring you to the login page. On the login page, sign into your account by entering your email and password for the account you just created, then click "Log In".</li>
+    <li>Once logged in, you will be brought to the site's homepage which is where you can view and favorite listings, see their locations on a map, and add listings.</li>
 </ol>
 
 </div>
@@ -90,8 +90,8 @@ We have created a client/server system that serves as a social platform for coll
 <p>Once logged in, users can do the following: </p>
 <ol>
     <li>Users can view a listing's details by clicking on its post on the main page.</li>
-    <li>Users can create a listing by clicking the plus in the top right corner of the page, next to the heart.<br>When creating a listing for a sublet, the address, semester, and number of roommates must be entered. At least one image must also be uploaded, and up to three can be added.</li>
-    <li>Users can favorite listings by clicking the heart on the post. Hearted listings can then be viewed by clicking the heart that's located on the top right of the page (In development).</li>
+    <li>Users can create a listing by clicking the plus icon in the top right corner of the page, next to the heart.<br>When creating a listing for a sublet, users must enter the address, semester, and number of roommates. At least one image must be uploaded, with a maximum of three allowed.</li>
+    <li>Users can favorite listings by clicking the heart on the post. Favorited listings can then be viewed by clicking the heart in the top right corner of the page (currently in development).</li>
 </ol>
 </div>
 
