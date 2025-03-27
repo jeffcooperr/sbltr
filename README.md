@@ -71,7 +71,7 @@ We have created a client/server system that serves as a social platform for coll
 <p>To create an account follow these steps:</p>
 <ol>
     <li>On the login page click "Sign up".</li>
-    <li>Enter in a valid UVM email address. Your account will not be successfully created if you aren't able to verify your email via a link (which will not be sent to an invalid address or a none @uvm.edu address).</li>
+    <li>Enter in a valid UVM email address. Your account will not be successfully created if you aren't able to verify your email via a link (which will not be sent to an invalid email address or a none @uvm.edu address).</li>
     <li>Enter in a strong password or generate one by clicking "Generate Strong Password".
     <br> - The password must be at least 6 characters long, contain both uppercase and lowercase letters, one special character, and one digit. 
     </li>
