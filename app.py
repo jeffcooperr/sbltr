@@ -150,7 +150,7 @@ def login():
         }
 
         try:
-            response = requests.post(url, json=payload)
+            response = requests.post(url, json=payload, timeout=10.0)
             data = response.json()
 
             print("Response from Firebase:", data)
@@ -162,7 +162,7 @@ def login():
                     f"/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
                 )
                 user_payload = {"idToken": data["idToken"]}
-                user_response = requests.post(user_info_url, json=user_payload)
+                user_response = requests.post(user_info_url, json=user_payload, timeout=10.0)
                 user_data = user_response.json()
 
                 if "users" in user_data and len(user_data["users"]) > 0:
@@ -184,7 +184,7 @@ def login():
                             "requestType": "VERIFY_EMAIL",
                             "idToken": data["idToken"]
                         }
-                        requests.post(verification_url, json=verification_payload)
+                        requests.post(verification_url, json=verification_payload, timeout=10.0)
 
                         flash(
                             "Your email is not verified! "
