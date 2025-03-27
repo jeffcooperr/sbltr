@@ -1,3 +1,4 @@
+"""Module containing app routes and their functionalities"""
 import os
 import requests
 import firebase_admin
@@ -34,7 +35,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -43,6 +44,7 @@ CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
 @app.route('/')
 def home():
+    """App route for the home/index page"""
     # If the user is logged in, show the listings
     if 'user_id' in session:
         # Fetch housing listings from Firestore
@@ -56,7 +58,7 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-            
+
             # get coordinates
             geolocator = Nominatim(user_agent="sublet")
             location = geolocator.geocode(full_address)
@@ -70,15 +72,19 @@ def home():
         user_ref = db.collection("users").document(session['user_id'])
         user_doc = user_ref.get()
         user_data = user_doc.to_dict()
-        favorites = user_data.get('favorites', [])
+        user_favorites = user_data.get('favorites', [])
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
+        return render_template('index.html',
+                               listings=listings,
+                               google_api_key=GOOGLE_API_KEY,
+                               favorites=user_favorites)
 
     return redirect(url_for('login'))
 
 
 @app.route('/add_listing', methods=['GET', 'POST'])
-def add_listing():    
+def add_listing():
+    """App route for the add listing page"""
     if 'user_id' not in session:
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
@@ -89,7 +95,7 @@ def add_listing():
         roommates = request.form['roommates']
         rent = request.form['rent']
         image = request.files.getlist('image')
-        
+
         # Convert all uploaded images to base64 encoded strings
         image_list = []
         for i in image:
@@ -126,12 +132,16 @@ def add_listing():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """App route for the login page"""
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
 
         # Firebase REST API endpoint for sign-in
-        url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
+        url = (
+            f"https://identitytoolkit.googleapis.com"
+            f"/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
+        )
 
         payload = {
             "email": email,
@@ -147,7 +157,10 @@ def login():
 
             if "idToken" in data:
                 # Get user verification status
-                user_info_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
+                user_info_url = (
+                    f"https://identitytoolkit.googleapis.com"
+                    f"/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
+                )
                 user_payload = {"idToken": data["idToken"]}
                 user_response = requests.post(user_info_url, json=user_payload)
                 user_data = user_response.json()
@@ -163,7 +176,10 @@ def login():
                         return redirect(url_for('home'))
                     else:
                         # Send a new verification email if they didn't verify their email.
-                        verification_url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                        verification_url = (
+                            f"https://identitytoolkit.googleapis.com"
+                            f"/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                        )
                         verification_payload = {
                             "requestType": "VERIFY_EMAIL",
                             "idToken": data["idToken"]
@@ -171,7 +187,10 @@ def login():
                         requests.post(verification_url, json=verification_payload)
 
                         flash(
-                            "Your email is not verified! A new verification email has been sent. Please check your inbox.")
+                            "Your email is not verified! "
+                            "A new verification email has been sent. "
+                            "Please check your inbox."
+                        )
                         return redirect(url_for('login'))
                 else:
                     flash("Unable to retrieve user information. Please try again.")
@@ -191,6 +210,7 @@ def login():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    """App route for the sign up page"""
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -208,22 +228,27 @@ def signup():
             flash(f"Error signing up: {str(e)}")
             return redirect(url_for('signup'))
 
-    return render_template('signup.html', firebase_config_key=FIREBASE_CONFIG_KEY,
-                                            firebase_auth_domain=FIREBASE_AUTH_DOMAIN,
-                                            firebase_project_id=FIREBASE_PROJECT_ID,
-                                            firebase_storage_bucket=FIREBASE_STORAGE_BUCKET,
-                                            firebase_messaging_sender_id=FIREBASE_MESSAGING_SENDER_ID,
-                                            firebase_measurement_id=FIREBASE_MEASUREMENT_ID,
-                                            firebase_app_id=FIREBASE_APP_ID)
+    return render_template(
+        'signup.html',
+        firebase_config_key=FIREBASE_CONFIG_KEY,
+        firebase_auth_domain=FIREBASE_AUTH_DOMAIN,
+        firebase_project_id=FIREBASE_PROJECT_ID,
+        firebase_storage_bucket=FIREBASE_STORAGE_BUCKET,
+        firebase_messaging_sender_id=FIREBASE_MESSAGING_SENDER_ID,
+        firebase_measurement_id=FIREBASE_MEASUREMENT_ID,
+        firebase_app_id=FIREBASE_APP_ID
+    )
 
 @app.route('/logout')
 def logout():
+    """App route for logout"""
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
 
 @app.route('/favorites')
 def favorites():
+    """App route for the favorites page"""
     if 'user_id' in session:
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
@@ -239,12 +264,13 @@ def favorites():
         user_ref = db.collection("users").document(session['user_id'])
         user_doc = user_ref.get()
         user_data = user_doc.to_dict()
-        favorites = user_data.get('favorites', [])
+        user_favorites = user_data.get('favorites', [])
 
-        return render_template('favorites.html', listings=listings, favorites=favorites)
+        return render_template('favorites.html', listings=listings, favorites=user_favorites)
 
 @app.route('/add_favorite/<listing>', methods=['POST'])
 def add_favorite(listing):
+    """App route for adding a listing to favorites"""
     # Retrieve current favorites list
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
@@ -259,6 +285,7 @@ def add_favorite(listing):
 
 @app.route('/delete_favorite/<listing>', methods=['POST'])
 def delete_favorite(listing):
+    """App route for deletings a listing from favorites"""
     # Retrieve current favorites list
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
@@ -276,6 +303,7 @@ def delete_favorite(listing):
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
 def get_distance(address):
+    """Function to automatically calculate distance of listings from campus"""
     geolocator = Nominatim(user_agent="sublet")
     location = geolocator.geocode(address)
 
@@ -284,9 +312,10 @@ def get_distance(address):
         distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
         return round(distance, 2)
     return None
-    
+
 
 def image_convert(image):
+    """Function to convert JPEG images to base64 strings"""
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
     MAX_SIZE = 1048487
     image = Image.open(image)
@@ -316,18 +345,19 @@ def image_convert(image):
 
 @app.route('/listing/<listing_id>')
 def listing_details(listing_id):
+    """App route for listings details pages"""
     if 'user_id' not in session:
         return redirect(url_for('login'))
-        
+
     listing_doc = db.collection("listings").document(listing_id).get()
-    
+
     if not listing_doc.exists:
         flash("Listing not found")
         return redirect(url_for('home'))
-        
+
     listing = listing_doc.to_dict()
     listing["id"] = listing_doc.id
-    
+
     # get email
     poster_id = listing["user_id"]
     user_doc = db.collection("users").document(poster_id).get()
@@ -335,16 +365,16 @@ def listing_details(listing_id):
         listing["poster_email"] = user_doc.to_dict().get("email")
     else:
         listing["poster_email"] = "Email not available"
-    
+
     listing["display_address"] = listing["address"].split(',')[0]
-    
+
     # Add coordinates for the map
     geolocator = Nominatim(user_agent="sublet")
     location = geolocator.geocode(listing["address"])
     if location:
         listing["latitude"] = location.latitude
         listing["longitude"] = location.longitude
-    
+
     return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
 
 if __name__ == '__main__':
