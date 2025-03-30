@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <style>
+        /* password toggle icon styling - will need to change this when we style the login and signup pages. */
+        /* Eye currently from GeeksForGeeks. Will want to change that. */
+        .password-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* password input */
+        .password-container input[type="password"],
+        .password-container input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* eye icon */
+        .password-container .toggle-password {
+            position: absolute;
+            right: 3%;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 10%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>Create an Account</h1>
@@ -25,9 +51,17 @@
         <input type="email" id="email" name="email" required><br><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+        <div class="password-container">
+            <input type="password" id="password" name="password" required>
+            <!-- Button to show password -->
+            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png"
+                 class = "toggle-password"
+                 id = "togglePassword" alt="eye_icon">
 
-        <button id="generatePassword" type="button">Generate Strong Password</button>
+        </div>
+        <br /><br />
+
+        <button id="generatePassword" type="button">Generate Strong Password</button> <br>
         <button id ="submitSignUp" type="submit">Sign Up</button>
     </form>
 
@@ -106,6 +140,25 @@
             });
         });
 
+    </script>
+
+    <!-- Password visibility toggling-->
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // Toggle the eye icon
+            if (togglePassword.src.match("https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png")) {
+                togglePassword.src = "https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png";
+            } else {
+                togglePassword.src = "https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png";
+            }
+        });
     </script>
 
     <script type="module" src = "../static/firebaseauth.js"></script>
