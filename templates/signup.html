@@ -54,7 +54,7 @@
         <div class="password-container">
             <input type="password" id="password" name="password" required>
             <!-- Button to show password -->
-            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png"
+            <img src="../static/images/eye_vis_icon.png"
                  class = "toggle-password"
                  id = "togglePassword" alt="eye_icon">
 
@@ -153,10 +153,10 @@
             password.setAttribute('type', type);
 
             // Toggle the eye icon
-            if (togglePassword.src.match("https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png")) {
-                togglePassword.src = "https://media.geeksforgeeks.org/wp-content/uploads/20210917145551/eye.png";
+            if (togglePassword.src.match("eye_vis_icon.png")) {
+                togglePassword.src = "static/images/eye_novis_icon.png";
             } else {
-                togglePassword.src = "https://media.geeksforgeeks.org/wp-content/uploads/20210917150049/eyeslash.png";
+                togglePassword.src = "static/images/eye_vis_icon.png";
             }
         });
     </script>
