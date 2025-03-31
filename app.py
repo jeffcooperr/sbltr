@@ -1,15 +1,15 @@
 """Module containing app routes and their functionalities"""
 import os
+import base64
+from io import BytesIO
 import requests
 import firebase_admin
-from firebase_admin import credentials, firestore, auth, storage
+from firebase_admin import credentials, firestore, auth
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
-import base64
 from PIL import Image
-from io import BytesIO
 
 load_dotenv()  # take environment variables from .env.
 # Code of your application, which uses environment variables (e.g. from `os.environ` or
@@ -174,32 +174,32 @@ def login():
                         session['user_id'] = data['localId']
                         flash("Login successful!")
                         return redirect(url_for('home'))
-                    else:
-                        # Send a new verification email if they didn't verify their email.
-                        verification_url = (
-                            f"https://identitytoolkit.googleapis.com"
-                            f"/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
-                        )
-                        verification_payload = {
-                            "requestType": "VERIFY_EMAIL",
-                            "idToken": data["idToken"]
-                        }
-                        requests.post(verification_url, json=verification_payload, timeout=10.0)
 
-                        flash(
-                            "Your email is not verified! "
-                            "A new verification email has been sent. "
-                            "Please check your inbox."
-                        )
-                        return redirect(url_for('login'))
-                else:
-                    flash("Unable to retrieve user information. Please try again.")
+                    # Send a new verification email if they didn't verify their email.
+                    verification_url = (
+                        f"https://identitytoolkit.googleapis.com"
+                        f"/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                    )
+                    verification_payload = {
+                        "requestType": "VERIFY_EMAIL",
+                        "idToken": data["idToken"]
+                    }
+                    requests.post(verification_url, json=verification_payload, timeout=10.0)
+
+                    flash(
+                        "Your email is not verified! "
+                        "A new verification email has been sent. "
+                        "Please check your inbox."
+                    )
                     return redirect(url_for('login'))
-            else:
-                error_message = data.get("error", {}).get("message", "Invalid login credentials")
-                print("Login error:", error_message)
-                flash(error_message)
+
+                flash("Unable to retrieve user information. Please try again.")
                 return redirect(url_for('login'))
+
+            error_message = data.get("error", {}).get("message", "Invalid login credentials")
+            print("Login error:", error_message)
+            flash(error_message)
+            return redirect(url_for('login'))
 
         except Exception as e:
             flash(f"Error logging in: {str(e)}")
@@ -249,24 +249,23 @@ def logout():
 @app.route('/favorites')
 def favorites():
     """App route for the favorites page"""
-    if 'user_id' in session:
-        # Fetch housing listings from Firestore
-        listings_ref = db.collection("listings")
-        docs = listings_ref.stream()
+    # Fetch housing listings from Firestore
+    listings_ref = db.collection("listings")
+    docs = listings_ref.stream()
 
-        listings = []
-        for doc in docs:
-            listing = doc.to_dict()
-            listing["id"] = doc.id
-            listings.append(listing)
+    listings = []
+    for doc in docs:
+        listing = doc.to_dict()
+        listing["id"] = doc.id
+        listings.append(listing)
 
-        # Fetch user's favorites list
-        user_ref = db.collection("users").document(session['user_id'])
-        user_doc = user_ref.get()
-        user_data = user_doc.to_dict()
-        user_favorites = user_data.get('favorites', [])
+    # Fetch user's favorites list
+    user_ref = db.collection("users").document(session['user_id'])
+    user_doc = user_ref.get()
+    user_data = user_doc.to_dict()
+    user_favorites = user_data.get('favorites', [])
 
-        return render_template('favorites.html', listings=listings, favorites=user_favorites)
+    return render_template('favorites.html', listings=listings, favorites=user_favorites)
 
 @app.route('/add_favorite/<listing>', methods=['POST'])
 def add_favorite(listing):
@@ -316,15 +315,15 @@ def get_distance(address):
 
 def image_convert(image):
     """Function to convert JPEG images to base64 strings"""
-    # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
-    MAX_SIZE = 1048487
+    # max_size is the maximum size (in bytes) Firebase allows for a string
+    max_size = 1048487
     image = Image.open(image)
     # Ensure that the image is in JPEG format
     image = image.convert('RGB')
 
 
     quality = 50
-    # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
+    # Initializes a buffer which will be used to store the image being compared to max_size
     buffer = BytesIO()
 
     while quality > 5:
@@ -337,11 +336,13 @@ def image_convert(image):
 
         # Encode the image as a base64 string and check if its size is below the limit
         encoded_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
-        if len(encoded_string) <= MAX_SIZE:
+        if len(encoded_string) <= max_size:
             return encoded_string
 
         # Reduce quality if image string was too large
         quality -= 5
+
+    return encoded_string
 
 @app.route('/listing/<listing_id>')
 def listing_details(listing_id):
