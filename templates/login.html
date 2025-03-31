@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        /* password toggle icon styling - will need to change this when we style the login and signup pages. */
+        /* Eye currently from GeeksForGeeks. Will want to change that. */
+        .password-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* password input */
+        .password-container input[type="password"],
+        .password-container input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* eye icon */
+        .password-container .toggle-password {
+            position: absolute;
+            right: 3%;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 10%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>Login</h1>
@@ -23,11 +49,41 @@
         <input type="email" id="email" name="email" required><br><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+        <div class="password-container">
+            <input type="password" id="password" name="password" required>
+            <!-- Button to show password -->
+            <img src="../static/images/eye_vis_icon.png"
+                 class = "toggle-password"
+                 id = "togglePassword" alt="eye_icon">
+
+        </div>
+        <br /><br />
+
+{#        <input type= "checkbox" onclick="myFunction()">Show Password#}
 
         <button type="submit">Log In</button>
     </form>
 
     <p>Need an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+
+    <!-- Password visibility toggling-->
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // Toggle the eye icon
+            if (togglePassword.src.match("eye_vis_icon.png")) {
+                togglePassword.src = "static/images/eye_novis_icon.png";
+            } else {
+                togglePassword.src = "static/images/eye_vis_icon.png";
+            }
+        });
+    </script>
+
 </body>
 </html>

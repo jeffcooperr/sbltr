@@ -69,6 +69,28 @@
             </a>
         </p>
     </header>
+
+    <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter">
+        <label for="max-rent">Max Rent ($):</label>
+        <input type="number" id="max-rent" name="max_rent" placeholder="5000">
+
+        <label for="roommates">Number of Roommates:</label>
+        <input type="number" id="roommates" name="roommates" placeholder="Any">
+
+        <label for="semester">Semester:</label>
+        <select id="semester" name="semester">
+            <option value="Any">Any</option>
+            <option value="Summer">Summer 2025</option>
+            <option value="Fall">Fall 2025</option>
+            <option value="Spring">Spring 2026</option>
+        </select>  
+
+        <label for="distance">Max Distance (miles):</label>
+        <input type="number" id="distance" name="max_distance" placeholder="5">
+
+        <button type="submit">Filter</button>
+    </form>
+
     <div class="page-layout">
         <div class="card-container">
             {% if listings %}
