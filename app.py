@@ -34,17 +34,23 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Anchor Point for central campus
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
+        # Get filter inputs
+        max_distance = request.args.get("max_distance", type=float)
+        max_rent = request.args.get("max_rent", type=float)
+        roommates = request.args.get("roommates", type=int)
+        semester = request.args.get("semester")
+
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
         docs = listings_ref.stream()
@@ -57,13 +63,24 @@ def home():
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
 
+
             # get coordinates
             geolocator = Nominatim(user_agent="sublet")
             location = geolocator.geocode(full_address)
             if location:
                 listing["latitude"] = location.latitude
                 listing["longitude"] = location.longitude
-
+            
+            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+                continue
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+                continue
+            if roommates is not None and listing.get("roommates") != roommates:
+                continue
+            # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
+            #if semester is not None and listing.get("semester") != semester:
+                #continue
+            
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -76,9 +93,8 @@ def home():
 
     return redirect(url_for('login'))
 
-
 @app.route('/add_listing', methods=['GET', 'POST'])
-def add_listing():    
+def add_listing():
     if 'user_id' not in session:
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
@@ -86,8 +102,14 @@ def add_listing():
     if request.method == 'POST':
         address = request.form['address']
         semester = request.form['semester']
-        roommates = request.form['roommates']
-        rent = request.form['rent']
+
+        try:
+            roommates = int(request.form['roommates'])
+            rent = int(request.form['rent'])
+        except ValueError:
+            flash("Rent and number of roommates must be valid numbers")
+            return redirect(url_for('add_listing'))
+        
         image = request.files.getlist('image')
         tags = request.form.getlist('tags')
         description = request.form['description']
@@ -98,7 +120,7 @@ def add_listing():
             image_string = image_convert(i)
             image_list.append(image_string)
 
-        #calculate distance automatically
+        # calculate distance automatically
         distance = get_distance(address)
 
         if distance is None:
@@ -213,18 +235,20 @@ def signup():
             return redirect(url_for('signup'))
 
     return render_template('signup.html', firebase_config_key=FIREBASE_CONFIG_KEY,
-                                            firebase_auth_domain=FIREBASE_AUTH_DOMAIN,
-                                            firebase_project_id=FIREBASE_PROJECT_ID,
-                                            firebase_storage_bucket=FIREBASE_STORAGE_BUCKET,
-                                            firebase_messaging_sender_id=FIREBASE_MESSAGING_SENDER_ID,
-                                            firebase_measurement_id=FIREBASE_MEASUREMENT_ID,
-                                            firebase_app_id=FIREBASE_APP_ID)
+                           firebase_auth_domain=FIREBASE_AUTH_DOMAIN,
+                           firebase_project_id=FIREBASE_PROJECT_ID,
+                           firebase_storage_bucket=FIREBASE_STORAGE_BUCKET,
+                           firebase_messaging_sender_id=FIREBASE_MESSAGING_SENDER_ID,
+                           firebase_measurement_id=FIREBASE_MEASUREMENT_ID,
+                           firebase_app_id=FIREBASE_APP_ID)
+
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
+
 
 @app.route('/favorites')
 def favorites():
@@ -249,6 +273,7 @@ def favorites():
 
         return render_template('favorites.html', listings=listings, favorites=favorites)
 
+
 @app.route('/add_favorite/<listing>', methods=['POST'])
 def add_favorite(listing):
     # Retrieve current favorites list
@@ -262,6 +287,7 @@ def add_favorite(listing):
         favorites.append(listing)
         user_ref.update({"favorites": favorites})
     return redirect(request.referrer)
+
 
 @app.route('/delete_favorite/<listing>', methods=['POST'])
 def delete_favorite(listing):
@@ -279,6 +305,7 @@ def delete_favorite(listing):
     user_ref.update({"favorites": favorites})
     return redirect(request.referrer)
 
+
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
 def get_distance(address):
@@ -290,7 +317,7 @@ def get_distance(address):
         distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
         return round(distance, 2)
     return None
-    
+
 
 def image_convert(image):
     # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
@@ -298,7 +325,6 @@ def image_convert(image):
     image = Image.open(image)
     # Ensure that the image is in JPEG format
     image = image.convert('RGB')
-
 
     quality = 50
     # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
@@ -320,20 +346,21 @@ def image_convert(image):
         # Reduce quality if image string was too large
         quality -= 5
 
+
 @app.route('/listing/<listing_id>')
 def listing_details(listing_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-        
+
     listing_doc = db.collection("listings").document(listing_id).get()
-    
+
     if not listing_doc.exists:
         flash("Listing not found")
         return redirect(url_for('home'))
-        
+
     listing = listing_doc.to_dict()
     listing["id"] = listing_doc.id
-    
+
     # get email
     poster_id = listing["user_id"]
     user_doc = db.collection("users").document(poster_id).get()
@@ -341,17 +368,18 @@ def listing_details(listing_id):
         listing["poster_email"] = user_doc.to_dict().get("email")
     else:
         listing["poster_email"] = "Email not available"
-    
+
     listing["display_address"] = listing["address"].split(',')[0]
-    
+
     # Add coordinates for the map
     geolocator = Nominatim(user_agent="sublet")
     location = geolocator.geocode(listing["address"])
     if location:
         listing["latitude"] = location.latitude
         listing["longitude"] = location.longitude
-    
+
     return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
