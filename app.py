@@ -56,7 +56,7 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-            
+
             # get coordinates
             geolocator = Nominatim(user_agent="sublet")
             location = geolocator.geocode(full_address)
@@ -89,6 +89,7 @@ def add_listing():
         roommates = request.form['roommates']
         rent = request.form['rent']
         image = request.files.getlist('image')
+        tags = request.form.getlist('tags')
         description = request.form['description']
         
         # Convert all uploaded images to base64 encoded strings
@@ -111,6 +112,7 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
+            "tags": tags,
             "description": description,
             "image": image_list
         }
@@ -236,6 +238,8 @@ def favorites():
             listing = doc.to_dict()
             listing["id"] = doc.id
             listings.append(listing)
+
+            listing["display_address"] = listing["address"].split(',')[0]
 
         # Fetch user's favorites list
         user_ref = db.collection("users").document(session['user_id'])

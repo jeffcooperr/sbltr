@@ -50,7 +50,7 @@
                                 <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House" width="100px">
                             {% endif %}
                             <div class="card-content">
-                                <h2>{{ listing.address }}</h2>
+                                <h2>{{ listing.display_address }}</h2>
                                 <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
                                 <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
                                 <p><strong>Rent:</strong> ${{ listing.rent }}</p>

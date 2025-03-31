@@ -62,6 +62,15 @@
                         <p>{{ listing.description }}</p>
                     </div>
                 {% endif %}
+
+                {% if listing.tags %}
+                    <div class="listing-tags">
+                        {% for tag in listing.tags %}
+                            <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
                     <p><strong>Contact:</strong> <a href="mailto:{{ listing.poster_email }}">{{ listing.poster_email }}</a></p>
                 </div>
 
