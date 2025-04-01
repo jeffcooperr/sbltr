@@ -34,7 +34,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -42,10 +42,16 @@ db = firestore.client()
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
 
-@app.route('/', methods='GET')
+@app.route('/', methods=['GET'])
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
+        # Get filter inputs
+        max_distance = request.args.get("max_distance", type=float)
+        max_rent = request.args.get("max_rent", type=float)
+        roommates = request.args.get("roommates", type=int)
+        semester = request.args.get("semester")
+
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
         docs = listings_ref.stream()
