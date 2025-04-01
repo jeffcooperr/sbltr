@@ -42,7 +42,7 @@ db = firestore.client()
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
 
-@app.route('/')
+@app.route('/', methods='GET')
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
@@ -57,14 +57,24 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-
+            
             # get coordinates
             geolocator = Nominatim(user_agent="sublet")
             location = geolocator.geocode(full_address)
             if location:
                 listing["latitude"] = location.latitude
                 listing["longitude"] = location.longitude
-
+            
+            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+                continue
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+                continue
+            if roommates is not None and listing.get("roommates") != roommates:
+                continue
+            # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
+            #if semester is not None and listing.get("semester") != semester:
+                #continue
+            
             listings.append(listing)
 
         # Fetch user's favorites list
