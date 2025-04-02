@@ -34,12 +34,13 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Anchor Point for central campus
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
+
 
 @app.route('/', methods=['GET'])
 def home():
@@ -62,8 +63,7 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-
-
+            
             # get coordinates
             geolocator = Nominatim(user_agent="sublet")
             location = geolocator.geocode(full_address)
@@ -93,6 +93,7 @@ def home():
 
     return redirect(url_for('login'))
 
+
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():
     if 'user_id' not in session:
@@ -102,14 +103,8 @@ def add_listing():
     if request.method == 'POST':
         address = request.form['address']
         semester = request.form['semester']
-
-        try:
-            roommates = int(request.form['roommates'])
-            rent = int(request.form['rent'])
-        except ValueError:
-            flash("Rent and number of roommates must be valid numbers")
-            return redirect(url_for('add_listing'))
-        
+        roommates = request.form['roommates']
+        rent = request.form['rent']
         image = request.files.getlist('image')
         tags = request.form.getlist('tags')
         description = request.form['description']
