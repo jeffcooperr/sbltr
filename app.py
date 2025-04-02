@@ -34,7 +34,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -63,13 +63,6 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-            
-            # get coordinates
-            geolocator = Nominatim(user_agent="sublet")
-            location = geolocator.geocode(full_address)
-            if location:
-                listing["latitude"] = location.latitude
-                listing["longitude"] = location.longitude
             
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
@@ -120,6 +113,13 @@ def add_listing():
             flash("Could not determine distance")
             return redirect(url_for('add_listing'))
 
+        # get coordinates
+        geolocator = Nominatim(user_agent="sublet")
+        location = geolocator.geocode(address)
+        if location:
+            latitude = location.latitude
+            longitude = location.longitude
+
         new_listing = {
             "user_id": session['user_id'],
             "address": address,
@@ -127,7 +127,9 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
-            "image": image_list
+            "image": image_list,
+            "latitude": latitude,
+            "longitude": longitude
         }
 
         try:
