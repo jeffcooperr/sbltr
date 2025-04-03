@@ -256,3 +256,48 @@ header p {
 .leaflet-routing-container {
     display: none;
 }
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.card-tags .tag {
+    font-size: 0.75em;
+    padding: 4px 10px;
+    background-color: #f0f7ff;
+    border: 1px solid #cce4ff;
+    border-radius: 12px;
+    color: #0066cc;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.card-tags .tag:hover {
+    background-color: #e6f2ff;
+    transform: translateY(-1px);
+}
+
+.map-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.details-map-container {
+    height: calc(100vh - 280px);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transport-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

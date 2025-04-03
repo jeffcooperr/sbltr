@@ -55,7 +55,7 @@
 
                 <div class="details-info">
                     <p><strong>${{ listing.rent }}/month - {{ listing.semester }}</strong></p>
-                    <p><strong>{{ listing.roommates }} roommates</strong></p>
+                    <p><strong>{{ listing.roommates }} roommates - {{ listing.bathrooms }} bathrooms</strong></p>
                 {% if listing.description %}
                     <div class="listing-description">
                         <strong>Description:</strong>
@@ -64,16 +64,41 @@
                 {% endif %}
 
                 {% if listing.tags %}
-                    <div class="listing-tags">
+                    <div class="tags-container">
                         {% for tag in listing.tags %}
-                            <span class="tag">{{ tag }}</span>
+                            <span class="tag">
+                                {% if tag == 'price_negotiable' %}
+                                    Price Negotiable
+                                {% elif tag == 'utilities_included' %}
+                                    Utilities Included
+                                {% elif tag == 'pet_friendly' %}
+                                    Pet Friendly
+                                {% elif tag == 'dates_flexible' %}
+                                    Dates Flexible
+                                {% elif tag == 'in_unit_laundry' %}
+                                    In-unit Laundry
+                                {% elif tag == 'parking' %}
+                                    On-site Parking
+                                {% elif tag == 'ac' %}
+                                    AC
+                                {% elif tag == 'dishwasher' %}
+                                    Dishwasher
+                                {% endif %}
+                            </span>
                         {% endfor %}
                     </div>
                 {% endif %}
                 
                     <p><strong>Contact:</strong> <a href="mailto:{{ listing.poster_email }}">{{ listing.poster_email }}</a></p>
                 </div>
+            </div>
+        </div>
 
+        <div class="map-section">
+            <div class="details-map-container">
+                <div id="map"></div>
+            </div>
+            <div class="transport-section">
                 <div class="transport-toggle">
                     <button id="walkBtn" class="transport-button active">
                         <i class="fa-solid fa-person-walking"></i>
@@ -85,16 +110,10 @@
                         <i class="fa-solid fa-car"></i>
                     </button>
                 </div>
-
                 <div class="route-info">
                     <p><span id="transport-icon"><i class="fa-solid fa-person-walking"></i></span> <span id="travel-info">Calculating...</span></p>
                 </div>
-
             </div>
-        </div>
-
-        <div class="map-container">
-            <div id="map"></div>
         </div>
     </div>
 

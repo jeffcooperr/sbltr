@@ -119,6 +119,32 @@
                                 <h2>{{ listing.display_address }}</h2>
                                 <p class="rent"><strong>${{ listing.rent }}/month</strong> - {{ listing.semester }}</p>
                                 <p><strong>{{ listing.roommates }}</strong> Roommates</p>
+                                {% if listing.tags %}
+                                <div class="card-tags">
+                                    {% for tag in listing.tags %}
+                                        <span class="tag">
+                                            {% if tag == 'price_negotiable' %}
+                                                Price Negotiable
+                                            {% elif tag == 'utilities_included' %}
+                                                Utilities Included
+                                            {% elif tag == 'pet_friendly' %}
+                                                Pet Friendly
+                                            {% elif tag == 'dates_flexible' %}
+                                                Dates Flexible
+                                            {% elif tag == 'in_unit_laundry' %}
+                                                In-unit Laundry
+                                            {% elif tag == 'parking' %}
+                                                On-site Parking
+                                            {% elif tag == 'ac' %}
+                                                AC
+                                            {% elif tag == 'dishwasher' %}
+                                                Dishwasher
+                                            {% endif %}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
                             </div>
                             {% if listing.id in favorites %}
                                 <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">

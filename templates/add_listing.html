@@ -34,19 +34,51 @@
         <label for="roommates">Number of Roommates:</label>
         <input type="number" id="roommates" name="roommates" required><br><br>
 
+        <label for="bathrooms">Number of Bathrooms:</label>
+        <input type="number" id="bathrooms" name="bathrooms" step="0.5" min="1" required><br><br>
+
         <label for="rent">Rent ($):</label>
         <input type="number" id="rent" name="rent" required><br><br>
 
         <label for="image">Upload Image:</label>
         <input type="file" id="image" name="image" accept="image/*" required multiple><br><br>
 
-        <label>Tags:</label>
-        <div class="tags-container">
-            <label class="tag-checkbox">
-                <input type="checkbox" name="tags" value="Price Negotiable">
-                <span class="tag-label">Price Negotiable</span>
-            </label>
-                    <!-- ADD MORE TAGS HERE -->
+        <div class="form-group">
+            <label>Tags:</label>
+            <div class="tags-container">
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="price_negotiable">
+                    <span class="tag-label">Price Negotiable</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="utilities_included">
+                    <span class="tag-label">Utilities Included</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="pet_friendly">
+                    <span class="tag-label">Pet Friendly</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="dates_flexible">
+                    <span class="tag-label">Dates Flexible</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="in_unit_laundry">
+                    <span class="tag-label">In-unit Laundry</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="parking">
+                    <span class="tag-label">On-site Parking</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="ac">
+                    <span class="tag-label">Air Conditioning</span>
+                </label>
+                <label class="tag-checkbox">
+                    <input type="checkbox" name="tags" value="dishwasher">
+                    <span class="tag-label">Dishwasher</span>
+                </label>
+            </div>
         </div>
 
         <label for="description">Description:</label>
