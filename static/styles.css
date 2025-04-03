@@ -37,6 +37,14 @@ body {
    width: 100%;
 }
 
+.filter-container input {
+   width: 150px;
+}
+
+.filter-container select {
+   width: 157px;
+}
+
 .card-container {
    display: grid;
    grid-template-columns: repeat(2, 1fr);
