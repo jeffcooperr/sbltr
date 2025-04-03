@@ -34,7 +34,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -63,6 +63,13 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
+            
+            # get coordinates
+            # geolocator = Nominatim(user_agent="sublet")
+            # location = geolocator.geocode(full_address)
+            # if location:
+            #     listing["latitude"] = location.latitude
+            #     listing["longitude"] = location.longitude
             
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
@@ -98,8 +105,11 @@ def add_listing():
         semester = request.form['semester']
         roommates = request.form['roommates']
         rent = request.form['rent']
+        bathrooms = request.form['bathrooms']
         image = request.files.getlist('image')
-
+        tags = request.form.getlist('tags')
+        description = request.form['description']
+        
         # Convert all uploaded images to base64 encoded strings
         image_list = []
         for i in image:
@@ -107,18 +117,14 @@ def add_listing():
             image_list.append(image_string)
 
         # calculate distance automatically
-        distance = get_distance(address)
+        distance, latitude, longitude = get_distance(address)
+
+        # Get latitude and longitude from the address
+        
 
         if distance is None:
             flash("Could not determine distance")
             return redirect(url_for('add_listing'))
-
-        # get coordinates
-        geolocator = Nominatim(user_agent="sublet")
-        location = geolocator.geocode(address)
-        if location:
-            latitude = location.latitude
-            longitude = location.longitude
 
         new_listing = {
             "user_id": session['user_id'],
@@ -127,6 +133,8 @@ def add_listing():
             "distance": distance,
             "roommates": roommates,
             "rent": rent,
+            "tags": tags,
+            "description": description,
             "image": image_list,
             "latitude": latitude,
             "longitude": longitude
@@ -256,6 +264,8 @@ def favorites():
             listing["id"] = doc.id
             listings.append(listing)
 
+            listing["display_address"] = listing["address"].split(',')[0]
+
         # Fetch user's favorites list
         user_ref = db.collection("users").document(session['user_id'])
         user_doc = user_ref.get()
@@ -306,8 +316,8 @@ def get_distance(address):
     if location:
         house_coordinates = (location.latitude, location.longitude)
         distance = geodesic(CAMPUS_COORDINATES, house_coordinates).miles
-        return round(distance, 2)
-    return None
+        return round(distance, 2), location.latitude, location.longitude
+    return None, None, None
 
 
 def image_convert(image):
