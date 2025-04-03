@@ -20,15 +20,26 @@
             });
         </script>
     </head>
+
     <body>
         <header>
-            <h1>Favorites</h1>
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo" width="200px">
+            </a>
             <p>
-                <a href="{{ url_for('favorites') }}" class="favorites">
+                <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="tooltiptext">Add a Listing</span>
+                </a>
+                <a href="{{ url_for('favorites') }}" class="favorites tooltip">
                     <i class="fa-solid fa-heart"></i>
+                    <span class="tooltiptext">Favorites</span>
                 </a>
             </p>
         </header>
+
+        <h1>Favorites</h1>
+
         <div class="container">
             {% if listings and favorites != [] %}
                 {% for listing in listings %}

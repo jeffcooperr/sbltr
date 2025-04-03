@@ -6,7 +6,7 @@
 
 body {
    font-family: 'Lato', sans-serif;
-   margin: 20px;
+   margin: 0;
    padding: 0;
    background-color: #f8f9fa;
    text-align: center;
@@ -18,15 +18,23 @@ body {
    gap: 20px;
    padding: 20px;
    justify-content: center;
-   max-width: 1200px;
+   max-width: 1400px;
    margin: 0 auto;
 }
 
 .page-layout {
    display: grid;
-   grid-template-columns: 50% 50%;
+   grid-template-columns: 0.75fr 2.25fr 2fr;
    gap: 20px;
    padding: 20px;
+}
+
+.filter {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   align-items: flex-start;
+   width: 100%;
 }
 
 .card-container {
@@ -79,10 +87,16 @@ body {
 }
 
 header {
-   position: relative;
-   max-width: 1200px;
+   position: sticky;
+   top: 0;
+   z-index: 1000;
+   max-width: 1400px;
    margin: 0 auto;
    text-align: left;
+   padding: 20px;
+   background-color: #f0f3f6;
+
+   ;
 }
 
 header h1 {
