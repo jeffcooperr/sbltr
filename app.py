@@ -34,7 +34,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -186,7 +186,6 @@ def login():
                     if user.get("emailVerified", False):
                         # Store user ID in session
                         session['user_id'] = data['localId']
-                        flash("Login successful!")
                         return redirect(url_for('home'))
                     else:
                         # Send a new verification email if they didn't verify their email.
