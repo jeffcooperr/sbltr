@@ -19,6 +19,21 @@
                 });
             });
         </script>
+
+        <!-- Tracks the position of the window and restores the position when the page reloads -->
+        <script>
+            window.addEventListener("beforeunload", function () {
+                sessionStorage.setItem("scrollPosition", window.scrollY);
+            });
+        
+            window.addEventListener("load", function () {
+                let scrollPosition = sessionStorage.getItem("scrollPosition");
+                if (scrollPosition !== null) {
+                    window.scrollTo(0, scrollPosition);
+                    sessionStorage.removeItem("scrollPosition");
+                }
+            });
+        </script>
     </head>
 
     <body>

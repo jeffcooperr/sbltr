@@ -95,8 +95,14 @@ header {
    text-align: left;
    padding: 20px;
    background-color: #f0f3f6;
+   height: 100px;
+}
 
-   ;
+header img {
+   position: absolute;
+   left: 50%;
+   transform: translateX(-50%);
+   height:100px;
 }
 
 header h1 {

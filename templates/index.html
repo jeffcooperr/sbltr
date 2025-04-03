@@ -40,21 +40,19 @@
         });
     </script>
     
-    <!-- Tracks the position of the window and restores the position when the page reloads -->
+    <!-- Tracks the position of the listings and restores the position when the page reloads -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let leftColumn = document.querySelector(".page-layout > :first-child");
+            let listingColumn = document.querySelector(".page-layout > :nth-child(2)");
     
-            if (leftColumn) {
-                // Restore scroll position
-                let savedScrollPosition = sessionStorage.getItem("leftColumnScroll");
+            if (listingColumn) {
+                let savedScrollPosition = sessionStorage.getItem("listingColumnScroll");
                 if (savedScrollPosition !== null) {
-                    leftColumn.scrollTop = savedScrollPosition;
+                    listingColumn.scrollTop = savedScrollPosition;
                 }
     
-                // Save scroll position on unload
                 window.addEventListener("beforeunload", function () {
-                    sessionStorage.setItem("leftColumnScroll", leftColumn.scrollTop);
+                    sessionStorage.setItem("listingColumnScroll", listingColumn.scrollTop);
                 });
             }
         });
@@ -64,7 +62,7 @@
 <body>
     <header>
         <a href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo" width="200px">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
         </a>
         <p>
             <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
