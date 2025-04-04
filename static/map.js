@@ -29,7 +29,7 @@ listings.forEach(listing => {
         
         // h2 is the address on the page, p:last-child is the rent on the page
         const address = listing.querySelector('h2').textContent;
-        const rent = listing.querySelector('p:last-child').textContent;
+        const rent = listing.querySelector('.rent').textContent;
         marker.bindPopup(`<b>${address}</b><br>${rent}`);
     }
 });
