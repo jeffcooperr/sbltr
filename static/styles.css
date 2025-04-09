@@ -10,9 +10,36 @@
    --morning-fog: rgb(247, 247, 247);
 }
 
+header {
+   position: sticky;
+   top: 0;
+   z-index: 1000;
+   max-width: 1400px;
+   margin: 0 auto;
+   text-align: left;
+   padding: 20px;
+   background-color: #154833;
+   height: 75px;
+}
+
+header img {
+   height: 90px;
+   transform: translateY(-8px);
+}
+
+header h1 {
+   display: inline-block;
+}
+
+header p {
+   padding-top: 40px;
+   float: right;
+   margin: 0;
+}
+
 body {
    font-family: 'Lato', sans-serif;
-   margin: 20px;
+   margin: 0;
    padding: 0;
    background-color: #f8f9fa;
    text-align: center;
@@ -24,7 +51,7 @@ body {
    gap: 20px;
    padding: 20px;
    justify-content: center;
-   max-width: 1200px;
+   max-width: 1400px;
    margin: 0 auto;
 }
 
@@ -97,24 +124,6 @@ body {
    color: #555;
 }
 
-header {
-   position: relative;
-   max-width: 1200px;
-   margin: 0 auto;
-   text-align: left;
-}
-
-header h1 {
-   display: inline-block;
-}
-
-header p {
-   padding-top: 40px;
-   display: inline-block;
-   float: right;
-   margin: 0;
-}
-
 .favorites {
    position: absolute;
    top: 50%;
@@ -125,11 +134,11 @@ header p {
    padding: 0;
    cursor: pointer;
    font-size: 20px;
-   color: black;
+   color: #fffefd;
 }
 
 .favorites:hover {
-   color: lightblue;
+   color: #268553;
 }
 
 .in-favorites {

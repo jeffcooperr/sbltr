@@ -4,9 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Listing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places"></script>
 </head>
 <body>
+    <header>
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
+        </a>
+        <p>
+            <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-user"></i>
+                <span class="tooltiptext">View Profile</span>
+            </a>
+            <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-plus"></i>
+                <span class="tooltiptext">Add a Listing</span>
+            </a>
+            <a href="{{ url_for('favorites') }}" class="favorites tooltip">
+                <i class="fa-solid fa-heart"></i>
+                <span class="tooltiptext">Favorites</span>
+            </a>
+        </p>
+    </header>
+
     <h1>Add a New Listing</h1>
 
     {% with messages = get_flashed_messages() %}

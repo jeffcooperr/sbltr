@@ -40,24 +40,29 @@
         });
     </script>
 
-    <!-- Tracks the position of the window and restores the position when the page reloads -->
+    <!-- Tracks the position of the listings and restores the position when the page reloads -->
     <script>
-        window.addEventListener("beforeunload", function () {
-            sessionStorage.setItem("scrollPosition", window.scrollY);
-        });
-
-        window.addEventListener("load", function () {
-            let scrollPosition = sessionStorage.getItem("scrollPosition");
-            if (scrollPosition !== null) {
-                window.scrollTo(0, scrollPosition);
-                sessionStorage.removeItem("scrollPosition");
+        document.addEventListener("DOMContentLoaded", function () {
+            let listingColumn = document.querySelector(".page-layout > :nth-child(2)");
+    
+            if (listingColumn) {
+                let savedScrollPosition = sessionStorage.getItem("listingColumnScroll");
+                if (savedScrollPosition !== null) {
+                    listingColumn.scrollTop = savedScrollPosition;
+                }
+    
+                window.addEventListener("beforeunload", function () {
+                    sessionStorage.setItem("listingColumnScroll", listingColumn.scrollTop);
+                });
             }
         });
     </script>
 </head>
 <body>
     <header>
-        <h1>Available Listings</h1>
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
+        </a>
         <p>
             <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
                 <i class="fa-solid fa-user"></i>
