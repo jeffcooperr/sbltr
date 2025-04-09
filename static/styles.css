@@ -2,12 +2,6 @@
 
 :root{
    --transition: all 0.3s ease;
-   --catamount-green: rgb(21, 71, 52);
-   --gold: rgb(255, 209, 0);
-   --vermont-slate: rgb(0, 49, 60);
-   --clear-sky: rgb(72, 159, 223);
-   --old-mill: rgb(220, 88, 42);
-   --morning-fog: rgb(247, 247, 247);
 }
 
 body {
@@ -230,7 +224,7 @@ header p {
 
 .route-info i {
     margin-right: 8px;
-    color:  var(--catamount-green);
+    color: #007bff;
 }
 
 .transport-toggle {
@@ -242,20 +236,20 @@ header p {
 
 .transport-button {
     padding: 10px 20px;
-    border: 1px solid var(--catamount-green);
+    border: 1px solid #007bff;
     background: white;
-    color: var(--gold);
+    color: #007bff;
     border-radius: 5px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease;
 }
 
 .transport-button:hover {
-    background: rgb(16, 54, 40);
+    background: #e6f0ff;
 }
 
 .transport-button.active {
-    background: var(--catamount-green);
+    background: #007bff;
     color: white;
 }
 
@@ -278,7 +272,7 @@ header p {
     background-color: #f0f7ff;
     border: 1px solid #cce4ff;
     border-radius: 12px;
-    color: var(--catamount-green);
+    color: #0066cc;
     font-weight: 500;
     transition: all 0.2s ease;
 }
@@ -289,17 +283,16 @@ header p {
 }
 
 .map-section {
-    position: sticky;
-    top: 20px;
-    height: calc(100vh - 40px);
-    overflow: hidden;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .details-map-container {
     height: calc(100vh - 280px);
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .transport-section {
@@ -309,127 +302,67 @@ header p {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.tags-container {
-    padding: 10px;
-}
-
-.tag {
-    display: inline-block;
-    font-size: 0.85em;
-    padding: 6px 12px;
-    background-color: #f0f7ff;
-    border: 1px solid #cce4ff;
-    border-radius: 20px;
-    color: var(--catamount-green);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.tag:hover {
-    background-color: #e6f2ff;
-    transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.listing-description {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-}
-
-.price-semester {
+/* Landing Page Styles */
+body.landing-page {
+    position: relative;
+    background: url("/static/images/landing_page_bg.jpg") no-repeat center center;
+    background-size: cover;
+    color: white;
+    text-align: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 15px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-.price {
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    z-index: 1;
+}
+
+.landing-page .landing-container {
+    position: relative;
+    z-index: 2;
+    height: 100%;
     display: flex;
     flex-direction: column;
-}
-
-.price .amount {
-    font-size: 2em;
-    font-weight: 700;
-    color: var(--catamount-green);
-}
-
-.price .when {
-    color: #6c757d;
-    font-size: 0.9em;
-}
-
-.semester {
-    text-align: right;
-}
-
-.semester .label {
-    display: block;
-    color: #6c757d;
-    font-size: 0.9em;
-}
-
-.semester .value {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #333;
-}
-
-.key-details {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px 0;
-    margin: 10px 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-}
-
-.detail-item {
-    font-size: 1.1em;
-}
-
-.detail-item i {
-    color: var(--catamount-green);
-    font-size: 1.2em;
-    padding: 2px;
-}
-
-.contact-info {
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
-}
-
-.contact-info h2 {
-    font-size: 1.3em;
-    color: #333;
-    font-weight: 600;
-}
-
-.email-button {
-    display: inline-flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    background-color: var(--catamount-green);
     color: white;
-    border-radius: 25px;
-    text-decoration: none;
-    transition: var(--transition);
+    text-align: center;
+    padding: 40px;
 }
-
-.email-button:hover {
-    background-color: rgb(16, 54, 40);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  
+.landing-page .landing-container h1 {
+    font-size: 3em;
+    margin-bottom: 30px;
 }
-
-.email-button i {
+  
+.landing-page .buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+  
+.landing-page .btn {
+    background: white;
+    color: #4a00e0;
+    padding: 12px 24px;
+    border-radius: 8px;
     font-size: 1.1em;
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+  
+.landing-page .btn:hover {
+    background: #f0f0f0;
+    color: #240082;
 }

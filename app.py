@@ -91,7 +91,11 @@ def home():
 
         return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
 
-    return redirect(url_for('login'))
+    return redirect(url_for('landing_page'))
+
+@app.route('/landing_page')
+def landing_page():
+    return render_template('landing_page.html')
 
 
 @app.route('/add_listing', methods=['GET', 'POST'])
