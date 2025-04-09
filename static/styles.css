@@ -63,7 +63,7 @@ body {
 
 .page-layout {
    display: grid;
-   grid-template-columns: 60% 40%;
+   grid-template-columns: 0.75fr 2.25fr 2.5fr;
    gap: 20px;
    padding: 20px;
 }
@@ -122,6 +122,24 @@ body {
    font-size: 1em;
    margin: 5px 0;
    color: #555;
+}
+
+.filter {
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
+   align-items: flex-start;
+   width: 100%;
+   padding-top: 35px;
+   padding-bottom: 25px;
+}
+
+.filter-container input {
+   width: 150px;
+}
+
+.filter-container select {
+   width: 157px;
 }
 
 .favorites {
