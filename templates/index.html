@@ -70,6 +70,21 @@
         </p>
     </header>
 
+    <!-- Advanced filters button -->
+    <button id="advanced-filters-btn" class="advanced-filters-btn">Advanced Filters</button>
+
+    <!-- Overlay window for filter menu-->
+    <div id="advanced-filters-overlay" class="advanced-filters-overlay" style="display: none;">
+        <div class="overlay-content">
+            <div id="advanced-filters-form">Advanced Filters</div>
+            <button type="button" id="apply-filters-btn">Apply Filters</button>
+            <button type="button" id="close-filters-btn">Close</button>
+        </div>
+    </div>
+
+    <!-- Clear filters button -->
+    <button id="clear-filters-btn">Clear Filters</button>
+
     <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter">
         <label for="max-rent">Max Rent ($):</label>
         <input type="number" id="max-rent" name="max_rent" placeholder="5000">
@@ -86,7 +101,7 @@
         </select>  
 
         <label for="distance">Max Distance (miles):</label>
-        <input type="number" id="distance" name="max_distance" placeholder="5">
+        <input type="number" step="0.01" id="distance" name="max_distance" placeholder="5">
 
         <button type="submit">Filter</button>
     </form>
@@ -188,6 +203,8 @@
     </div>
 
     <script src="{{ url_for('static', filename='map.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='tag_filters.js') }}"></script>
 
     <!-- Temp -->
     <p><a href="{{ url_for('login') }}">Go back to login</a></p>
