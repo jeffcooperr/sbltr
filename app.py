@@ -64,13 +64,6 @@ def home():
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
             
-            # get coordinates
-            # geolocator = Nominatim(user_agent="sublet")
-            # location = geolocator.geocode(full_address)
-            # if location:
-            #     listing["latitude"] = location.latitude
-            #     listing["longitude"] = location.longitude
-            
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
             if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
