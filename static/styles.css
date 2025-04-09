@@ -301,3 +301,129 @@ header p {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.tags-container {
+    padding: 10px;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.85em;
+    padding: 6px 12px;
+    background-color: #f0f7ff;
+    border: 1px solid #cce4ff;
+    border-radius: 20px;
+    color: #0066cc;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tag:hover {
+    background-color: #e6f2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.listing-description {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.price-semester {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price .amount {
+    font-size: 2em;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.price .when {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.semester {
+    text-align: right;
+}
+
+.semester .label {
+    display: block;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.semester .value {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+.key-details {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    margin: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-item {
+    font-size: 1.1em;
+}
+
+.detail-item i {
+    color: #007bff;
+    font-size: 1.2em;
+    padding: 2px;
+}
+
+.contact-info {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.contact-info h2 {
+    font-size: 1.3em;
+    color: #333;
+    font-weight: 600;
+}
+
+.email-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.email-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.email-button i {
+    font-size: 1.1em;
+}
