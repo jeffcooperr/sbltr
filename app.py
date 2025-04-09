@@ -34,7 +34,7 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -91,7 +91,11 @@ def home():
 
         return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
 
-    return redirect(url_for('login'))
+    return redirect(url_for('landing_page'))
+
+@app.route('/landing_page')
+def landing_page():
+    return render_template('landing_page.html')
 
 
 @app.route('/add_listing', methods=['GET', 'POST'])
