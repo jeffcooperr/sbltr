@@ -2,6 +2,12 @@
 
 :root{
    --transition: all 0.3s ease;
+   --catamount-green: rgb(21, 71, 52);
+   --gold: rgb(255, 209, 0);
+   --vermont-slate: rgb(0, 49, 60);
+   --clear-sky: rgb(72, 159, 223);
+   --old-mill: rgb(220, 88, 42);
+   --morning-fog: rgb(247, 247, 247);
 }
 
 body {
@@ -224,7 +230,7 @@ header p {
 
 .route-info i {
     margin-right: 8px;
-    color: #007bff;
+    color:  var(--catamount-green);
 }
 
 .transport-toggle {
@@ -236,20 +242,20 @@ header p {
 
 .transport-button {
     padding: 10px 20px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--catamount-green);
     background: white;
-    color: #007bff;
+    color: var(--gold);
     border-radius: 5px;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .transport-button:hover {
-    background: #e6f0ff;
+    background: rgb(16, 54, 40);
 }
 
 .transport-button.active {
-    background: #007bff;
+    background: var(--catamount-green);
     color: white;
 }
 
@@ -272,7 +278,7 @@ header p {
     background-color: #f0f7ff;
     border: 1px solid #cce4ff;
     border-radius: 12px;
-    color: #0066cc;
+    color: var(--catamount-green);
     font-weight: 500;
     transition: all 0.2s ease;
 }
@@ -314,7 +320,7 @@ header p {
     background-color: #f0f7ff;
     border: 1px solid #cce4ff;
     border-radius: 20px;
-    color: #0066cc;
+    color: var(--catamount-green);
     font-weight: 500;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -351,7 +357,7 @@ header p {
 .price .amount {
     font-size: 2em;
     font-weight: 700;
-    color: #007bff;
+    color: var(--catamount-green);
 }
 
 .price .when {
@@ -389,7 +395,7 @@ header p {
 }
 
 .detail-item i {
-    color: #007bff;
+    color: var(--catamount-green);
     font-size: 1.2em;
     padding: 2px;
 }
@@ -411,7 +417,7 @@ header p {
     align-items: center;
     gap: 10px;
     padding: 12px 20px;
-    background-color: #007bff;
+    background-color: var(--catamount-green);
     color: white;
     border-radius: 25px;
     text-decoration: none;
@@ -419,7 +425,7 @@ header p {
 }
 
 .email-button:hover {
-    background-color: #0056b3;
+    background-color: rgb(16, 54, 40);
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
