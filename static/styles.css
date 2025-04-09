@@ -241,7 +241,7 @@ header p {
     color: #007bff;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .transport-button:hover {
@@ -283,16 +283,17 @@ header p {
 }
 
 .map-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    position: sticky;
+    top: 20px;
+    height: calc(100vh - 40px);
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 .details-map-container {
     height: calc(100vh - 280px);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .transport-section {
@@ -336,7 +337,7 @@ header p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     padding: 20px;
     background: #f8f9fa;
     border-radius: 10px;
@@ -378,7 +379,7 @@ header p {
     display: flex;
     justify-content: space-around;
     padding: 20px 0;
-    margin: 20px 0;
+    margin: 10px 0;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
 }
@@ -414,8 +415,7 @@ header p {
     color: white;
     border-radius: 25px;
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .email-button:hover {
