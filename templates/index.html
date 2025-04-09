@@ -88,6 +88,36 @@
         <label for="distance">Max Distance (miles):</label>
         <input type="number" step="0.01" id="distance" name="max_distance" placeholder="5">
 
+        <fieldset class="tag-filter">
+            <legend>Filter by Tags:</legend>
+            <div class="tag-options">
+                {% for tag in all_tags %}
+                    <label>
+                        <input type="checkbox" name="tags" value="{{ tag }}"
+                            {% if tag in request.args.getlist('tags') %}checked{% endif %}>
+                            {% if tag == 'price_negotiable' %}
+                                Price Negotiable
+                            {% elif tag == 'utilities_included' %}
+                                Utilities Included
+                            {% elif tag == 'pet_friendly' %}
+                                Pet Friendly
+                            {% elif tag == 'dates_flexible' %}
+                                Dates Flexible
+                            {% elif tag == 'in_unit_laundry' %}
+                                In-unit Laundry
+                            {% elif tag == 'parking' %}
+                                On-site Parking
+                            {% elif tag == 'ac' %}
+                                AC
+                            {% elif tag == 'dishwasher' %}
+                                Dishwasher
+                            {% else %}
+                                {{ tag }}
+                            {% endif %}
+                    </label>
+                {% endfor %}
+            </div>
+        </fieldset>
         <button type="submit">Filter</button>
     </form>
 

@@ -41,16 +41,29 @@ db = firestore.client()
 # Anchor Point for UVM Central Campus
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
+def get_all_tags():
+    listings = list(db.collection('listings').stream())
+
+    all_tags = set()
+    for doc in listings:
+        data = doc.to_dict()
+        tags = data.get('tags', [])
+        all_tags.update(tags)
+
+    return all_tags
 
 @app.route('/', methods=['GET'])
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
+        all_tags = get_all_tags()
         # Get filter inputs
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
         semester = request.args.get("semester")
+
+        selected_tags = request.args.getlist("tags")
 
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
@@ -60,9 +73,7 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
-
-            full_address = listing["address"]
-            listing["display_address"] = full_address.split(',')[0]
+            listing["display_address"] = listing["address"].split(',')[0]
             
             # get coordinates
             # geolocator = Nominatim(user_agent="sublet")
@@ -80,7 +91,12 @@ def home():
             # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
             #if semester is not None and listing.get("semester") != semester:
                 #continue
-            
+            if selected_tags:
+                for listing in listings:
+                    listing_tags = listing.get("tags", [])
+                    if not set(selected_tags).issubset(set(listing_tags)):
+                        continue
+
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -89,7 +105,7 @@ def home():
         user_data = user_doc.to_dict()
         favorites = user_data.get('favorites', [])
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
+        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites, all_tags=sorted(all_tags))
 
     return redirect(url_for('login'))
 
