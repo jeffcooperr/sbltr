@@ -37,6 +37,17 @@
                 data-rent="{{ listing.rent }}">
                 <h1>{{ listing.display_address }}</h1>
                 
+                <div class="price-semester">
+                    <div class="price">
+                        <span class="amount">${{ listing.rent }}</span>
+                        <span class="when">per month</span>
+                    </div>
+                    <div class="semester">
+                        <span class="label">Available for</span>
+                        <span class="value">{{ listing.semester }}</span>
+                    </div>
+                </div>
+
                 {% if listing.image|length > 1 %}
                     <section class="splide">
                         <div class="splide__track">
@@ -53,9 +64,22 @@
                     <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
                 {% endif %}
 
+                <div class="key-details">
+                    <div class="detail-item">
+                        <i class="fa-solid fa-people-group"></i>
+                        <span>{{ listing.roommates }} Roommates</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fa-solid fa-bath"></i>
+                        <span>{{ listing.bathrooms }} Bathrooms</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>{{ listing.distance }} miles to campus</span>
+                    </div>
+                </div>
+
                 <div class="details-info">
-                    <p><strong>${{ listing.rent }}/month - {{ listing.semester }}</strong></p>
-                    <p><strong>{{ listing.roommates }} roommates - {{ listing.bathrooms }} bathrooms</strong></p>
                 {% if listing.description %}
                     <div class="listing-description">
                         <strong>Description:</strong>
@@ -89,7 +113,13 @@
                     </div>
                 {% endif %}
                 
-                    <p><strong>Contact:</strong> <a href="mailto:{{ listing.poster_email }}">{{ listing.poster_email }}</a></p>
+                    <div class="contact-info">
+                        <h2>Contact Information</h2>
+                        <a href="mailto:{{ listing.poster_email }}" class="email-button">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>{{ listing.poster_email }}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,6 +146,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Add Google Maps Distance Matrix API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=geometry"></script>

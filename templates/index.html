@@ -182,6 +182,21 @@
             {% endif %}
         </div>
 
+
+        <script>
+            const listingCoordinates = [
+                {% for listing in listings %}
+                    {
+                        lat: parseFloat("{{ listing.latitude }}"),
+                        lng: parseFloat("{{ listing.longitude }}"),
+                        address: "{{ listing.display_address|safe }}",
+                        rent: "{{ listing.rent }}",
+                        image: "data:image/jpeg;base64,{{ listing.image[0] }}"
+                    }{% if not loop.last %},{% endif %} // adds commas between each object
+                {% endfor %}
+            ];
+        </script>
+
         <div class="map-container">
             <div id="map"></div>
         </div>
@@ -193,5 +208,6 @@
 
     <!-- Temp -->
     <p><a href="{{ url_for('login') }}">Go back to login</a></p>
+
 </body>
 </html>

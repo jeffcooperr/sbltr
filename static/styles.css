@@ -2,6 +2,12 @@
 
 :root{
    --transition: all 0.3s ease;
+   --catamount-green: rgb(21, 71, 52);
+   --gold: rgb(255, 209, 0);
+   --vermont-slate: rgb(0, 49, 60);
+   --clear-sky: rgb(72, 159, 223);
+   --old-mill: rgb(220, 88, 42);
+   --morning-fog: rgb(247, 247, 247);
 }
 
 body {
@@ -224,7 +230,7 @@ header p {
 
 .route-info i {
     margin-right: 8px;
-    color: #007bff;
+    color:  var(--catamount-green);
 }
 
 .transport-toggle {
@@ -236,20 +242,20 @@ header p {
 
 .transport-button {
     padding: 10px 20px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--catamount-green);
     background: white;
-    color: #007bff;
+    color: var(--gold);
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .transport-button:hover {
-    background: #e6f0ff;
+    background: rgb(16, 54, 40);
 }
 
 .transport-button.active {
-    background: #007bff;
+    background: var(--catamount-green);
     color: white;
 }
 
@@ -272,7 +278,7 @@ header p {
     background-color: #f0f7ff;
     border: 1px solid #cce4ff;
     border-radius: 12px;
-    color: #0066cc;
+    color: var(--catamount-green);
     font-weight: 500;
     transition: all 0.2s ease;
 }
@@ -283,16 +289,17 @@ header p {
 }
 
 .map-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    position: sticky;
+    top: 20px;
+    height: calc(100vh - 40px);
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 .details-map-container {
     height: calc(100vh - 280px);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .transport-section {
@@ -489,4 +496,129 @@ body.landing-page {
 button {
     padding: 10px;
     margin: 5px;
+}
+
+.tags-container {
+    padding: 10px;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.85em;
+    padding: 6px 12px;
+    background-color: #f0f7ff;
+    border: 1px solid #cce4ff;
+    border-radius: 20px;
+    color: var(--catamount-green);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tag:hover {
+    background-color: #e6f2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.listing-description {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.price-semester {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price .amount {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--catamount-green);
+}
+
+.price .when {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.semester {
+    text-align: right;
+}
+
+.semester .label {
+    display: block;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.semester .value {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+.key-details {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    margin: 10px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-item {
+    font-size: 1.1em;
+}
+
+.detail-item i {
+    color: var(--catamount-green);
+    font-size: 1.2em;
+    padding: 2px;
+}
+
+.contact-info {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.contact-info h2 {
+    font-size: 1.3em;
+    color: #333;
+    font-weight: 600;
+}
+
+.email-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background-color: var(--catamount-green);
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.email-button:hover {
+    background-color: rgb(16, 54, 40);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.email-button i {
+    font-size: 1.1em;
 }
