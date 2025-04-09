@@ -2,7 +2,7 @@ import os
 import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth, storage
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
@@ -34,36 +34,26 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-becbe54e7f.json')  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Anchor Point for UVM Central Campus
 CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
-def get_all_tags():
-    listings = list(db.collection('listings').stream())
-
-    all_tags = set()
-    for doc in listings:
-        data = doc.to_dict()
-        tags = data.get('tags', [])
-        all_tags.update(tags)
-
-    return all_tags
 
 @app.route('/', methods=['GET'])
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
-        all_tags = get_all_tags()
-        # Get filter inputs
+        # Get basic filter inputs
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
         semester = request.args.get("semester")
 
         selected_tags = request.args.getlist("tags")
+        selected_tags = request.args.getlist('tags')
 
         # Fetch housing listings from Firestore
         listings_ref = db.collection("listings")
@@ -73,7 +63,9 @@ def home():
         for doc in docs:
             listing = doc.to_dict()
             listing["id"] = doc.id  # Store the document ID
-            listing["display_address"] = listing["address"].split(',')[0]
+
+            full_address = listing["address"]
+            listing["display_address"] = full_address.split(',')[0]
             
             # get coordinates
             # geolocator = Nominatim(user_agent="sublet")
@@ -81,22 +73,21 @@ def home():
             # if location:
             #     listing["latitude"] = location.latitude
             #     listing["longitude"] = location.longitude
-            
-            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+
+            if selected_tags:
+                listing_tags = set(listing.get("tags", []))
+                if not all(tag in listing_tags for tag in selected_tags):
+                    continue
+            if max_distance is not None and float(listing.get("distance", float('inf'))) > max_distance:
                 continue
-            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+            if max_rent is not None and int(listing.get("rent", float('inf'))) > max_rent:
                 continue
-            if roommates is not None and listing.get("roommates") != roommates:
+            if roommates is not None and int(listing.get("roommates", -1)) != roommates:
                 continue
             # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
             #if semester is not None and listing.get("semester") != semester:
                 #continue
-            if selected_tags:
-                for listing in listings:
-                    listing_tags = listing.get("tags", [])
-                    if not set(selected_tags).issubset(set(listing_tags)):
-                        continue
-
+            
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -105,7 +96,7 @@ def home():
         user_data = user_doc.to_dict()
         favorites = user_data.get('favorites', [])
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites, all_tags=sorted(all_tags))
+        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
 
     return redirect(url_for('login'))
 
@@ -396,6 +387,22 @@ def listing_details(listing_id):
         listing["longitude"] = location.longitude
 
     return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
+
+# Used for dynamically adding tags to the advanced filters menu
+# Takes directly from firebase (Need to edit tag names to be more user friendly (Ex. "Price Negotiable" instead of price_negotiable))
+@app.route('/api/tags', methods=['GET'])
+def get_tags():
+    listings_ref = db.collection("listings")
+    docs = listings_ref.stream()
+
+    tags = set()
+    for doc in docs:
+        listing = doc.to_dict()
+        if "tags" in listing:
+            for tag in listing["tags"]:
+                tags.add(tag)
+
+    return jsonify(list(tags))
 
 
 if __name__ == '__main__':
