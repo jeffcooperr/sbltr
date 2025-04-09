@@ -354,6 +354,25 @@ def delete_favorite(listing):
     user_ref.update({"favorites": favorites})
     return redirect(request.referrer)
 
+@app.route('/delete_listing/<listing>', methods=['POST'])
+def delete_listing(listing):
+    user_id = session['user_id']
+    listings_ref = db.collection("listings").where("user_id", "==", user_id)
+    docs = listings_ref.stream()
+
+    for doc in docs:
+        listing1 = doc.to_dict()
+
+        if doc.id == listing:
+            doc_ref = db.collection("listings").document(doc.id)
+            # Delete the document from Firestore
+            doc_ref.delete()
+
+            print(f"Listing has been been deleted.")
+            break
+
+    return redirect(request.referrer)
+
 
 # Should edit this at some point so that user can enter city, state, country
 # Or just make it automatic when they autofill address
