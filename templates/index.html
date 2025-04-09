@@ -17,7 +17,7 @@
     <!-- Splide CSS for image carousel -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
     <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
-    
+
     <!-- For the carousel element -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -39,13 +39,13 @@
             });
         });
     </script>
-    
+
     <!-- Tracks the position of the window and restores the position when the page reloads -->
     <script>
         window.addEventListener("beforeunload", function () {
             sessionStorage.setItem("scrollPosition", window.scrollY);
         });
-    
+
         window.addEventListener("load", function () {
             let scrollPosition = sessionStorage.getItem("scrollPosition");
             if (scrollPosition !== null) {
@@ -59,6 +59,10 @@
     <header>
         <h1>Available Listings</h1>
         <p>
+            <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-user"></i>
+                <span class="tooltiptext">View Profile</span>
+            </a>
             <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
                 <i class="fa-solid fa-plus"></i>
                 <span class="tooltiptext">Add a Listing</span>
@@ -98,7 +102,7 @@
             <option value="Summer">Summer 2025</option>
             <option value="Fall">Fall 2025</option>
             <option value="Spring">Spring 2026</option>
-        </select>  
+        </select>
 
         <label for="distance">Max Distance (miles):</label>
         <input type="number" step="0.01" id="distance" name="max_distance" placeholder="5">
@@ -112,9 +116,9 @@
                 {% for listing in listings %}
                     <a href="{{ url_for('listing_details', listing_id=listing.id) }}" class="card-link">
                         <div class="card"
-                            data-lat="{{ listing.latitude }}" 
+                            data-lat="{{ listing.latitude }}"
                             data-lng="{{ listing.longitude }}">
-                        
+
                             {% if listing.image|length > 1 %}
                                 <section id="image-carousel-{{ loop.index }}" class="splide" onclick="event.stopPropagation()">
                                     <div class="splide__track">
