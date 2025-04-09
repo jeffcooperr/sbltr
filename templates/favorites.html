@@ -24,8 +24,14 @@
         <header>
             <h1>Favorites</h1>
             <p>
-                <a href="{{ url_for('favorites') }}" class="favorites">
-                    <i class="fa-solid fa-heart"></i>
+                <a href="{{ url_for('home') }}" class="favorites tooltip" style="margin-right: 15px;">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="tooltiptext">Home</span>
+                </a>
+
+                <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="tooltiptext">Add a Listing</span>
                 </a>
             </p>
         </header>

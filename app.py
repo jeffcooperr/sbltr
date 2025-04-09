@@ -46,17 +46,17 @@ CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
-        # Get basic filter inputs
+        # Get user id to filter out users own listings.
+        user_id = session['user_id']
+
+        # Get filter inputs
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
         semester = request.args.get("semester")
 
-        selected_tags = request.args.getlist("tags")
-        selected_tags = request.args.getlist('tags')
-
         # Fetch housing listings from Firestore
-        listings_ref = db.collection("listings")
+        listings_ref = db.collection("listings").where("user_id", "!=", user_id)
         docs = listings_ref.stream()
 
         listings = []
@@ -66,17 +66,24 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-            
+
+            # get coordinates
+            # geolocator = Nominatim(user_agent="sublet")
+            # location = geolocator.geocode(full_address)
+            # if location:
+            #     listing["latitude"] = location.latitude
+            #     listing["longitude"] = location.longitude
+
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
-            if max_rent is not None and int(listing.get("rent", float('inf'))) > max_rent:
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
                 continue
-            if roommates is not None and int(listing.get("roommates", -1)) != roommates:
+            if roommates is not None and listing.get("roommates") != roommates:
                 continue
             # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
-            #if semester is not None and listing.get("semester") != semester:
-                #continue
-            
+            # if semester is not None and listing.get("semester") != semester:
+            # continue
+
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -85,14 +92,65 @@ def home():
         user_data = user_doc.to_dict()
         favorites = user_data.get('favorites', [])
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
+        return render_template('index.html',
+                               listings=listings,
+                               google_api_key=GOOGLE_API_KEY,
+                               favorites=favorites)
 
-    return redirect(url_for('landing_page'))
+    return redirect(url_for('login'))
 
 @app.route('/landing_page')
 def landing_page():
     return render_template('landing_page.html')
 
+@app.route('/profile_page', methods=['GET', 'POST'])
+def profile_page():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        user_ref = db.collection("users").document(user_id)
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict()
+
+        favorites = user_data.get('favorites', [])
+        user_email = user_data.get("email", "Email not available") if user_data else "Email not available"
+        username = user_email.split('@')[0]
+
+        max_distance = request.args.get("max_distance", type=float)
+        max_rent = request.args.get("max_rent", type=float)
+        roommates = request.args.get("roommates", type=int)
+        semester = request.args.get("semester")
+
+        # Fetch user housing listings from Firestore
+        listings_ref = db.collection("listings").where("user_id", "==", user_id)
+        docs = listings_ref.stream()
+
+        listings = []
+        for doc in docs:
+            listing = doc.to_dict()
+            listing["id"] = doc.id  # Store the document ID
+
+            full_address = listing["address"]
+            listing["display_address"] = full_address.split(',')[0]
+
+            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+                continue
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+                continue
+            if roommates is not None and listing.get("roommates") != roommates:
+                continue
+
+            listings.append(listing)
+
+        favorites = user_data.get('favorites', [])
+
+        return render_template('profile_page.html',
+                               listings=listings,
+                               google_api_key=GOOGLE_API_KEY,
+                               favorites=favorites,
+                               username=username)
+
+    # <-- if user is not logged in, handle it here
+    return redirect(url_for('login'))
 
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():
@@ -100,7 +158,22 @@ def add_listing():
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
 
+
+    user_id = session['user_id']
+    listings_ref = db.collection("listings").where("user_id", "==", user_id)
+    user_listings = list(listings_ref.stream())
+    listing_count = len(user_listings)
+    listing_limit_reached = listing_count >= 3
+
+    if listing_limit_reached:
+        return render_template('add_listing.html',
+                               google_api_key=GOOGLE_API_KEY,
+                               listing_limit_reached=listing_limit_reached)
+
     if request.method == 'POST':
+        # Check how many listings the user already has. If it is 3, then they will be unable to make a new one.
+
+        # Otherwise save the listing.
         address = request.form['address']
         semester = request.form['semester']
         roommates = request.form['roommates']
@@ -109,7 +182,7 @@ def add_listing():
         image = request.files.getlist('image')
         tags = request.form.getlist('tags')
         description = request.form['description']
-        
+
         # Convert all uploaded images to base64 encoded strings
         image_list = []
         for i in image:
@@ -120,8 +193,6 @@ def add_listing():
         distance, latitude, longitude = get_distance(address)
 
         # Get latitude and longitude from the address
-        
-
         if distance is None:
             flash("Could not determine distance")
             return redirect(url_for('add_listing'))
@@ -139,7 +210,6 @@ def add_listing():
             "latitude": latitude,
             "longitude": longitude
         }
-
         try:
             db.collection("listings").add(new_listing)
             flash("Listing added successfully!")
@@ -148,7 +218,9 @@ def add_listing():
             flash(f"Error adding listing: {str(e)}")
             return redirect(url_for('add_listing'))
 
-    return render_template('add_listing.html', google_api_key=GOOGLE_API_KEY)
+    return render_template('add_listing.html',
+                           google_api_key=GOOGLE_API_KEY,
+                           listing_limit_reached = False)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -304,6 +376,25 @@ def delete_favorite(listing):
             favorites.remove(favorite)
 
     user_ref.update({"favorites": favorites})
+    return redirect(request.referrer)
+
+@app.route('/delete_listing/<listing>', methods=['POST'])
+def delete_listing(listing):
+    user_id = session['user_id']
+    listings_ref = db.collection("listings").where("user_id", "==", user_id)
+    docs = listings_ref.stream()
+
+    for doc in docs:
+        listing1 = doc.to_dict()
+
+        if doc.id == listing:
+            doc_ref = db.collection("listings").document(doc.id)
+            # Delete the document from Firestore
+            doc_ref.delete()
+
+            print(f"Listing has been been deleted.")
+            break
+
     return redirect(request.referrer)
 
 
