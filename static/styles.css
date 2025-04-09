@@ -24,17 +24,19 @@ body {
 
 .page-layout {
    display: grid;
-   grid-template-columns: 0.75fr 2.25fr 2fr;
+   grid-template-columns: 2.5fr 2.5fr;
    gap: 20px;
    padding: 20px;
 }
 
 .filter {
-   display: flex;
+   /* display: flex;
    flex-direction: column;
    gap: 15px;
    align-items: flex-start;
-   width: 100%;
+   width: 100%; */
+   padding-top: 35px;
+   padding-bottom: 25px;
 }
 
 .filter-container input {
@@ -102,7 +104,7 @@ header {
    margin: 0 auto;
    text-align: left;
    padding: 20px;
-   background-color: #f0f3f6;
+   background-color: #052b11;
    height: 100px;
 }
 
@@ -110,7 +112,7 @@ header img {
    position: absolute;
    left: 50%;
    transform: translateX(-50%);
-   height:100px;
+   height: 100px;
 }
 
 header h1 {
