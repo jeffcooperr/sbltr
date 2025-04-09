@@ -46,17 +46,17 @@ CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 def home():
     # If the user is logged in, show the listings
     if 'user_id' in session:
-        # Get basic filter inputs
+        # Get user id to filter out users own listings.
+        user_id = session['user_id']
+
+        # Get filter inputs
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
         semester = request.args.get("semester")
 
-        selected_tags = request.args.getlist("tags")
-        selected_tags = request.args.getlist('tags')
-
         # Fetch housing listings from Firestore
-        listings_ref = db.collection("listings")
+        listings_ref = db.collection("listings").where("user_id", "!=", user_id)
         docs = listings_ref.stream()
 
         listings = []
@@ -66,17 +66,24 @@ def home():
 
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
-            
+
+            # get coordinates
+            # geolocator = Nominatim(user_agent="sublet")
+            # location = geolocator.geocode(full_address)
+            # if location:
+            #     listing["latitude"] = location.latitude
+            #     listing["longitude"] = location.longitude
+
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
-            if max_rent is not None and int(listing.get("rent", float('inf'))) > max_rent:
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
                 continue
-            if roommates is not None and int(listing.get("roommates", -1)) != roommates:
+            if roommates is not None and listing.get("roommates") != roommates:
                 continue
             # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
-            #if semester is not None and listing.get("semester") != semester:
-                #continue
-            
+            # if semester is not None and listing.get("semester") != semester:
+            # continue
+
             listings.append(listing)
 
         # Fetch user's favorites list
@@ -85,9 +92,12 @@ def home():
         user_data = user_doc.to_dict()
         favorites = user_data.get('favorites', [])
 
-        return render_template('index.html', listings=listings, google_api_key=GOOGLE_API_KEY, favorites=favorites)
+        return render_template('index.html',
+                               listings=listings,
+                               google_api_key=GOOGLE_API_KEY,
+                               favorites=favorites)
 
-    return redirect(url_for('landing_page'))
+    return redirect(url_for('login'))
 
 @app.route('/landing_page')
 def landing_page():
