@@ -24,17 +24,17 @@ body {
 
 .page-layout {
    display: grid;
-   grid-template-columns: 2.5fr 2.5fr;
+   grid-template-columns: 0.75fr 2.25fr 2.5fr;
    gap: 20px;
    padding: 20px;
 }
 
 .filter {
-   /* display: flex;
+   display: flex;
    flex-direction: column;
    gap: 15px;
    align-items: flex-start;
-   width: 100%; */
+   width: 100%;
    padding-top: 35px;
    padding-bottom: 25px;
 }
@@ -104,15 +104,13 @@ header {
    margin: 0 auto;
    text-align: left;
    padding: 20px;
-   background-color: #052b11;
-   height: 100px;
+   background-color: #154833;
+   height: 75px;
 }
 
 header img {
-   position: absolute;
-   left: 50%;
-   transform: translateX(-50%);
-   height: 100px;
+   height: 90px;
+   transform: translateY(-8px);
 }
 
 header h1 {
@@ -121,7 +119,6 @@ header h1 {
 
 header p {
    padding-top: 40px;
-   display: inline-block;
    float: right;
    margin: 0;
 }
@@ -136,7 +133,7 @@ header p {
    padding: 0;
    cursor: pointer;
    font-size: 20px;
-   color: black;
+   color: #fffefd;
 }
 
 .favorites:hover {
@@ -285,4 +282,27 @@ header p {
 
 .leaflet-routing-container {
     display: none;
+}
+
+.add-listing {
+   position: relative;
+   background: url("/static/images/landing_page_bg.jpg") no-repeat center center;
+   background-size: cover;
+   height: 100%;
+}
+
+.add-listing h1 {
+   margin-top: 0;
+   padding: 30px;
+}
+
+.add-listing-form {
+   background-color: rgba(255, 255, 255, 0.9);
+   width: 65%;
+   display: inline-block;
+   height: 100%;
+}
+
+.add-listing-wrapper {
+   height: 750px;
 }

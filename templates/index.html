@@ -64,30 +64,6 @@
         <a href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
         </a>
-    </header>
-    
-    <div class="filter-container">
-        <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter">
-            <label for="max-rent">Max Rent ($):</label>
-            <input type="number" id="max-rent" name="max_rent" placeholder="5000">
-
-            <label for="roommates">Number of Roommates:</label>
-            <input type="number" id="roommates" name="roommates" placeholder="Any">
-
-            <label for="semester">Semester:</label>
-            <select id="semester" name="semester">
-                <option value="Any">Any</option>
-                <option value="Summer">Summer 2025</option>
-                <option value="Fall">Fall 2025</option>
-                <option value="Spring">Spring 2026</option>
-            </select>  
-
-            <label for="distance">Max Distance (miles):</label>
-            <input type="number" id="distance" name="max_distance" placeholder="5">
-
-            <button type="submit">Filter</button>
-        </form>
-
         <p>
             <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
                 <i class="fa-solid fa-plus"></i>
@@ -98,9 +74,32 @@
                 <span class="tooltiptext">Favorites</span>
             </a>
         </p>
-    </div>
+    </header>
 
     <div class="page-layout">
+        <div class="filter-container">
+            <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter">
+                <label for="max-rent">Max Rent ($):</label>
+                <input type="number" id="max-rent" name="max_rent" placeholder="5000">
+    
+                <label for="roommates">Number of Roommates:</label>
+                <input type="number" id="roommates" name="roommates" placeholder="Any">
+    
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester">
+                    <option value="Any">Any</option>
+                    <option value="Summer">Summer 2025</option>
+                    <option value="Fall">Fall 2025</option>
+                    <option value="Spring">Spring 2026</option>
+                </select>  
+    
+                <label for="distance">Max Distance (miles):</label>
+                <input type="number" id="distance" name="max_distance" placeholder="5">
+    
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+        
         <div class="card-container">
             {% if listings %}
                 {% for listing in listings %}
