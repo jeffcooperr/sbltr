@@ -93,6 +93,54 @@ def home():
 def landing_page():
     return render_template('landing_page.html')
 
+@app.route('/profile_page', methods=['GET', 'POST'])
+def profile_page():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        user_ref = db.collection("users").document(user_id)
+        user_doc = user_ref.get()
+        user_data = user_doc.to_dict()
+
+        favorites = user_data.get('favorites', [])
+        user_email = user_data.get("email", "Email not available") if user_data else "Email not available"
+        username = user_email.split('@')[0]
+
+        max_distance = request.args.get("max_distance", type=float)
+        max_rent = request.args.get("max_rent", type=float)
+        roommates = request.args.get("roommates", type=int)
+        semester = request.args.get("semester")
+
+        # Fetch user housing listings from Firestore
+        listings_ref = db.collection("listings").where("user_id", "==", user_id)
+        docs = listings_ref.stream()
+
+        listings = []
+        for doc in docs:
+            listing = doc.to_dict()
+            listing["id"] = doc.id  # Store the document ID
+
+            full_address = listing["address"]
+            listing["display_address"] = full_address.split(',')[0]
+
+            if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
+                continue
+            if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
+                continue
+            if roommates is not None and listing.get("roommates") != roommates:
+                continue
+
+            listings.append(listing)
+
+        favorites = user_data.get('favorites', [])
+
+        return render_template('profile_page.html',
+                               listings=listings,
+                               google_api_key=GOOGLE_API_KEY,
+                               favorites=favorites,
+                               username=username)
+
+    # <-- if user is not logged in, handle it here
+    return redirect(url_for('login'))
 
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():
