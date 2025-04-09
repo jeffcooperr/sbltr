@@ -148,7 +148,22 @@ def add_listing():
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
 
+
+    user_id = session['user_id']
+    listings_ref = db.collection("listings").where("user_id", "==", user_id)
+    user_listings = list(listings_ref.stream())
+    listing_count = len(user_listings)
+    listing_limit_reached = listing_count >= 3
+
+    if listing_limit_reached:
+        return render_template('add_listing.html',
+                               google_api_key=GOOGLE_API_KEY,
+                               listing_limit_reached=listing_limit_reached)
+
     if request.method == 'POST':
+        # Check how many listings the user already has. If it is 3, then they will be unable to make a new one.
+
+        # Otherwise save the listing.
         address = request.form['address']
         semester = request.form['semester']
         roommates = request.form['roommates']
@@ -157,7 +172,7 @@ def add_listing():
         image = request.files.getlist('image')
         tags = request.form.getlist('tags')
         description = request.form['description']
-        
+
         # Convert all uploaded images to base64 encoded strings
         image_list = []
         for i in image:
@@ -168,8 +183,6 @@ def add_listing():
         distance, latitude, longitude = get_distance(address)
 
         # Get latitude and longitude from the address
-        
-
         if distance is None:
             flash("Could not determine distance")
             return redirect(url_for('add_listing'))
@@ -187,7 +200,6 @@ def add_listing():
             "latitude": latitude,
             "longitude": longitude
         }
-
         try:
             db.collection("listings").add(new_listing)
             flash("Listing added successfully!")
@@ -196,7 +208,9 @@ def add_listing():
             flash(f"Error adding listing: {str(e)}")
             return redirect(url_for('add_listing'))
 
-    return render_template('add_listing.html', google_api_key=GOOGLE_API_KEY)
+    return render_template('add_listing.html',
+                           google_api_key=GOOGLE_API_KEY,
+                           listing_limit_reached = False)
 
 
 @app.route('/login', methods=['GET', 'POST'])
