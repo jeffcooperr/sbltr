@@ -22,6 +22,12 @@ body {
    margin: 0 auto;
 }
 
+.profile-page-layout {
+    display: inline-grid;
+    gap: 20px;
+    padding: 20px;
+}
+
 .page-layout {
    display: grid;
    grid-template-columns: 60% 40%;
@@ -35,6 +41,13 @@ body {
    gap: 20px;
    max-height: calc(100vh - 100px);
    overflow-y: auto;
+}
+
+.profile-card-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: left;
 }
 
 .card {
