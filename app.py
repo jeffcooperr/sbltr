@@ -251,7 +251,6 @@ def login():
                     if user.get("emailVerified", False):
                         # Store user ID in session
                         session['user_id'] = data['localId']
-                        flash("Login successful!")
                         return redirect(url_for('home'))
                     else:
                         # Send a new verification email if they didn't verify their email.

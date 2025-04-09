@@ -28,7 +28,27 @@
     <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="page-layout">
+    <header>
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
+        </a>
+        <p>
+            <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-user"></i>
+                <span class="tooltiptext">View Profile</span>
+            </a>
+            <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-plus"></i>
+                <span class="tooltiptext">Add a Listing</span>
+            </a>
+            <a href="{{ url_for('favorites') }}" class="favorites tooltip">
+                <i class="fa-solid fa-heart"></i>
+                <span class="tooltiptext">Favorites</span>
+            </a>
+        </p>
+    </header>
+
+    <div class="details-page-layout">
         <div class="details-container">
             <p>
                 <a href="{{ url_for('home') }}" class="favorites tooltip" style="margin-right: 15px;">

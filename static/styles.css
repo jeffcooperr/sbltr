@@ -206,6 +206,13 @@ body {
     text-decoration: none;
 }
 
+.details-page-layout {
+   display: grid;
+   grid-template-columns: 60% 40%;
+   gap: 20px;
+   padding: 20px;
+}
+
 .details-container {
     text-align: left;
     padding: 20px;
