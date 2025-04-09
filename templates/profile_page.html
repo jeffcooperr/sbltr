@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet Routing Machine -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css') }}" />
+    <script src="{{ url_for('static', filename='leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js') }}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const splides = document.querySelectorAll('.splide');
+            for (const splide of splides) {
+                new Splide(splide, {
+                    type: 'loop',
+                    perPage: 1,
+                    rewind: true
+                }).mount();
+            }
+
+            initDeleteConfirmation();
+        });
+
+        function initDeleteConfirmation() {
+            const deleteButtons = document.querySelectorAll('.delete-listing-btn');
+            // confirmation popup is the popup function.
+            const confirmationPopup = document.getElementById('deleteConfirmationPopup');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            const listing_address = document.getElementById('listing_address')
+
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const formToSubmit = this.closest('form');
+                    confirmDeleteBtn.setAttribute('data-form-id', formToSubmit.id);
+
+                    confirmationPopup.classList.add('show');
+                });
+            });
+
+            <!-- Handle deletion -->
+            confirmDeleteBtn.addEventListener('click', function() {
+                const formId = this.getAttribute('data-form-id');
+                const formToSubmit = document.getElementById(formId);
+                formToSubmit.submit();
+            });
+
+            <!-- Handle cancellation -->
+            cancelDeleteBtn.addEventListener('click', function() {
+                confirmationPopup.classList.remove('show');
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === confirmationPopup) {
+                    confirmationPopup.classList.remove('show');
+                }
+            });
+        }
+    </script>
+
+    <script src="https://kit.fontawesome.com/af33664da2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome {{username}}!</h1>
+        <p>
+            <a href="{{ url_for('home') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-house"></i>
+                <span class="tooltiptext">Home</span>
+            </a>
+            <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                <i class="fa-solid fa-plus"></i>
+                <span class="tooltiptext">Add a Listing</span>
+            </a>
+            <a href="{{ url_for('favorites') }}" class="favorites tooltip">
+                <i class="fa-solid fa-heart"></i>
+                <span class="tooltiptext">Favorites</span>
+            </a>
+        </p>
+    </header>
+    <h2>Your Listings</h2>
+    <div class="profile-page-layout">
+        <div class="profile-card-container">
+            {% if listings %}
+                {% for listing in listings %}
+                    <div class="card-wrapper">
+                        <a href="{{ url_for('listing_details', listing_id=listing.id) }}" class="card-link">
+                            <div class="card"
+                                data-lat="{{ listing.latitude }}"
+                                data-lng="{{ listing.longitude }}">
+
+                                {% if listing.image|length > 1 %}
+                                    <section id="image-carousel-{{ loop.index }}" class="splide" onclick="event.stopPropagation()">
+                                        <div class="splide__track">
+                                            <ul class="splide__list">
+                                                {% for image in listing.image %}
+                                                <li class="splide__slide">
+                                                    <img src="data:image/jpeg;base64, {{ image }}" alt="House">
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </section>
+                                {% else %}
+                                    <img src="data:image/jpeg;base64, {{ listing.image[0] }}" alt="House">
+                                {% endif %}
+                                <div class="card-content">
+                                    <h2>{{ listing.display_address }}</h2>
+                                    <p class="rent"><strong>${{ listing.rent }}/month</strong> - {{ listing.semester }}</p>
+                                    <p><strong>{{ listing.roommates }}</strong> Roommates</p>
+                                    {% if listing.tags %}
+                                    <div class="card-tags">
+                                        {% for tag in listing.tags %}
+                                            <span class="tag">
+                                                {% if tag == 'price_negotiable' %}
+                                                    Price Negotiable
+                                                {% elif tag == 'utilities_included' %}
+                                                    Utilities Included
+                                                {% elif tag == 'pet_friendly' %}
+                                                    Pet Friendly
+                                                {% elif tag == 'dates_flexible' %}
+                                                    Dates Flexible
+                                                {% elif tag == 'in_unit_laundry' %}
+                                                    In-unit Laundry
+                                                {% elif tag == 'parking' %}
+                                                    On-site Parking
+                                                {% elif tag == 'ac' %}
+                                                    AC
+                                                {% elif tag == 'dishwasher' %}
+                                                    Dishwasher
+                                                {% endif %}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </a>
+
+                        <div class="delete-button-wrapper" onclick="event.stopPropagation();">
+                            <form id="delete-form-{{ listing.id }}" action="{{ url_for('delete_listing', listing=listing.id) }}" method="POST">
+                                <button type="button" class="in-favorites delete-listing-btn">
+                                    <i class="fa-solid fa-trash fa-lg" style="color: #d7423e;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                <p>No listings Available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="deleteConfirmationPopup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Delete Listing</h3>
+            <p>Are you sure you want to delete the listing at <br><strong>Address Here</strong>?<br>This action cannot be undone.</p>
+            <div class="popup-buttons">
+                <button id="cancelDelete" class="popup-btn cancel-btn">No, Keep It</button>
+                <button id="confirmDelete" class="popup-btn confirm-btn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
