@@ -54,9 +54,11 @@ def home():
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
         semester = request.args.get("semester")
+        selected_tags = request.args.getlist("tags")
 
         # Fetch housing listings from Firestore
-        listings_ref = db.collection("listings").where("user_id", "!=", user_id)
+        # removed .where("user_id", "!=", user_id) for testing purposes
+        listings_ref = db.collection("listings")
         docs = listings_ref.stream()
 
         listings = []
@@ -67,15 +69,19 @@ def home():
             full_address = listing["address"]
             listing["display_address"] = full_address.split(',')[0]
 
+            if selected_tags:
+                listing_tags = set(listing.get("tags", []))
+                if not all(tag in listing_tags for tag in selected_tags):
+                    continue
+
             if max_distance is not None and listing.get("distance", float('inf')) > max_distance:
                 continue
             if max_rent is not None and listing.get("rent", float('inf')) > max_rent:
                 continue
             if roommates is not None and listing.get("roommates") != roommates:
                 continue
-            # in the firestore listings don't currently have semester fields, this breaks it, once they have the field, can be added back
-            # if semester is not None and listing.get("semester") != semester:
-            # continue
+            if semester and semester != "Any" and listing.get("semester") != semester:
+                continue
 
             listings.append(listing)
 
@@ -90,7 +96,7 @@ def home():
                                google_api_key=GOOGLE_API_KEY,
                                favorites=favorites)
 
-    return redirect(url_for('login'))
+    return redirect(url_for('landing_page'))
 
 @app.route('/landing_page')
 def landing_page():
@@ -167,14 +173,27 @@ def add_listing():
         # Check how many listings the user already has. If it is 3, then they will be unable to make a new one.
 
         # Otherwise save the listing.
-        address = request.form['address']
-        semester = request.form['semester']
-        roommates = request.form['roommates']
-        rent = request.form['rent']
-        bathrooms = request.form['bathrooms']
+        address = request.form['address'].strip()
+        semester = request.form['semester'].strip()
+        roommates = request.form['roommates'].strip()
+        rent = request.form['rent'].strip()
+        bathrooms = request.form['bathrooms'].strip()
         image = request.files.getlist('image')
         tags = request.form.getlist('tags')
-        description = request.form['description']
+        description = request.form['description'].strip()
+
+        # type validation
+        try:
+            roommates = int(roommates)
+            rent = int(rent)
+            bathrooms = float(bathrooms)
+        except ValueError:
+            flash("Please enter valid numbers for roommates, rent, and bathrooms.")
+            return redirect(url_for('add_listing'))
+
+        if not address or not semester or not description:
+            flash("Please fill out all required fields.")
+            return redirect(url_for('add_listing'))
 
         # Convert all uploaded images to base64 encoded strings
         image_list = []
