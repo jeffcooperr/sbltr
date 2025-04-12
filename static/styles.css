@@ -128,18 +128,29 @@ body {
    display: flex;
    flex-direction: column;
    gap: 15px;
-   align-items: flex-start;
+   align-items: center;
    width: 100%;
    padding-top: 35px;
-   padding-bottom: 25px;
 }
 
 .filter-container input {
    width: 150px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   border-radius: 2px;
 }
 
 .filter-container select {
    width: 157px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   border-radius: 2px;
+}
+
+.filter-container input:focus,
+.filter-container select:focus {
+   border: 1px solid var(--gold);
+   outline: none;
 }
 
 .favorites {
@@ -157,6 +168,11 @@ body {
 
 .favorites:hover {
    color: var(--gold);
+}
+
+.favorites-header {
+    text-align: left;
+    padding: 20px;
 }
 
 .in-favorites {
@@ -749,3 +765,159 @@ button {
     z-index: 10;
 }
 
+.add-listing {
+   position: relative;
+   background: url("/static/images/landing_page_bg.jpg") no-repeat center center;
+   background-size: cover;
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.add-listing h1 {
+   font-size: 24pt;
+   text-align: center;
+}
+
+.add-listing-form {
+   background-color: rgba(255, 255, 255, 0.9);
+   width: 65%;
+   padding: 0 40px 0 40px;
+   box-sizing: border-box;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   font-size: 13pt;
+}
+
+.input-box {
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 5px;
+   width: 65%;
+   margin: 15px auto;
+   position: relative;
+   display: inline-block;
+}
+
+.input-box .form-label {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    padding: 0 10px;
+    pointer-events: none;
+    transition: 0.15s all ease;
+}
+
+.input-box input:focus + .form-label,
+.input-box select:focus + .form-label,
+.input-box textarea:focus + .form-label,
+.input-box input:valid + .form-label,
+.input-box select:valid + .form-label,
+.input-box textarea:not(:placeholder-shown) + .form-label {
+    transform: translate(-10px, -37px);
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea {
+   height: 45px;
+   text-align: left;
+   font-size: 13pt;
+   width: 100%;
+   border-radius: 5px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.input-box input:focus,
+.input-box select:focus,
+.input-box textarea:focus {
+   border: 1px solid var(--gold);
+   outline: none;
+}
+
+.file-select {
+   padding: 30px 0px 30px 0px;
+}
+
+.file-select label {
+   padding-right: 20px;
+}
+
+input::file-selector-button,
+.filter button {
+   padding: 0.75em;
+   background-color: rgba(38, 133, 83, 0.7);
+   border-radius: 5px;
+   color: white;
+   font-weight: bold;
+   border: 1px solid var(--gold);
+}
+
+.submit-btn {
+    padding: 30px 0px;
+    padding: 0.75em;
+    background-color: rgba(38, 133, 83, 0.7);
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    border: 1px solid var(--gold);
+}
+
+.submit-btn:hover {
+    background-color: rgba(38, 133, 83, 0.9);
+    cursor: pointer;
+}
+
+.clear-filters-btn {
+   background-color: rgba(255, 0, 0, 0.7);
+   color: white;
+   font-weight: bold;
+   border-radius: 5px;
+   border: 1px solid red;
+}
+
+.clear-filters-btn:hover {
+   cursor: pointer;
+   background-color: rgba(255, 0, 0, 0.9);
+}
+
+input::file-selector-button:hover,
+.filter button:hover {
+   background-color: rgba(38, 133, 83, 0.9);
+   cursor: pointer;
+}
+
+.filter button {
+   padding: 0.75em 2em;
+}
+
+.tag-checkbox input[type="checkbox"] {
+   display: none;
+}
+
+.tag-checkbox {
+   display: inline-block;
+   margin: 5px 5px;
+   padding: 10px 20px;
+   border: 1.5px solid var(--catamount-green);
+   border-radius: 8px;
+   background-color: rgba(255, 255, 255, 0.8);
+   color: var(--catamount-green);
+   cursor: pointer;
+   font-weight: bold;
+}
+
+.tag-checkbox:checked {
+   border: 1px solid var(--gold);
+}
+ 
+.tag-checkbox input[type="checkbox"]:checked + span,
+.tag-checkbox input[type="checkbox"]:checked ~ label,
+.tag-checkbox:has(input[type="checkbox"]:checked) {
+   background-color: rgb(38, 133, 83);
+   color: var(--gold);
+}
