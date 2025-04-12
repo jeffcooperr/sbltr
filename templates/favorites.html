@@ -42,23 +42,36 @@
             <a href="{{ url_for('home') }}">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
             </a>
-            <p>
-                <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="tooltiptext">View Profile</span>
-                </a>
-                <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
-                    <i class="fa-solid fa-plus"></i>
-                    <span class="tooltiptext">Add a Listing</span>
-                </a>
-                <a href="{{ url_for('favorites') }}" class="favorites tooltip">
-                    <i class="fa-solid fa-heart"></i>
-                    <span class="tooltiptext">Favorites</span>
-                </a>
-            </p>
+            <div class="nav-icons">
+                <div class="dropdown">
+                    <a href="#" class="favorites tooltip" style="margin-right: 15px;">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('home') }}">Home</a>
+                        <a href="{{ url_for('login') }}">Logout</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('add_listing') }}">Add a Listing</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="{{ url_for('favorites')}}" class="favorites tooltip">
+                        <i class="fa-solid fa-heart"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('favorites') }}" class="last-item">View Favorite Listings</a>
+                    </div>
+                </div>
+            </div>
         </header>
         <div class="container">
-            {% if listings and favorites != [] %}
+            {% if listings and favorites != []%}
                 {% for listing in listings %}
                     {% if listing.id in favorites %}
                         <div class="card">
@@ -81,7 +94,7 @@
                                 <h2>{{ listing.display_address }}</h2>
                                 <p><strong>Distance from Campus:</strong> {{ listing.distance }} miles</p>
                                 <p><strong># of Roommates:</strong> {{ listing.roommates }}</p>
-                                <p><strong>Rent:</strong> ${{ listing.rent }}</p>
+                                <p><strong>Rent:</strong> $ {{ listing.rent }} </p>
                                 <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
                                     <button type="submit" class="in-favorites">
                                         <i class="fa-solid fa-heart"></i>
