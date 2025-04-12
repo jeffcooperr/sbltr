@@ -831,3 +831,113 @@ button {
       font-size: 1.1em;
    }
 }
+
+
+.auth-container h1 {
+    color: var(--catamount-green);
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.auth-form-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.auth-form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form-group input:focus {
+    outline: none;
+    border-color: var(--catamount-green);
+}
+
+.auth-container button {
+    background-color: var(--catamount-green);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px 0;
+}
+
+.auth-container button:hover {
+    background-color: rgb(16, 54, 40);
+}
+
+.auth-container .auth-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.auth-container .auth-links a {
+    color: var(--catamount-green);
+    text-decoration: none;
+}
+
+.auth-container .auth-links a:hover {
+    text-decoration: underline;
+}
+
+#generatePassword {
+    background-color: #666 !important;
+}
+
+#generatePassword:hover {
+    background-color: #555 !important;
+}
+
+body.auth-page {
+    position: relative;
+    background: url("/static/images/landing_page_bg.jpg");
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-page .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    z-index: 1;
+}
+
+.auth-container {
+    position: relative;
+    z-index: 2;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

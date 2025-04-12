@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
     <title>Sign Up</title>
     <style>
         /* password toggle icon styling - will need to change this when we style the login and signup pages. */
@@ -31,44 +33,53 @@
         }
     </style>
 </head>
-<body>
-    <h1>Create an Account</h1>
+<body class="auth-page">
+    <div class="overlay"></div>
+    <div class="auth-container">
+        <h1>Create an Account</h1>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-    <form id = "signUpForm">
-        <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="password">Password:</label>
-        <div class="password-container">
-            <input type="password" id="password" name="password" required>
-            <!-- Button to show password -->
-            <img src="../static/images/eye_vis_icon.png"
-                 class = "toggle-password"
-                 id = "togglePassword" alt="eye_icon">
-
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
         </div>
-        <br /><br />
 
-        <button id="generatePassword" type="button">Generate Strong Password</button> <br>
-        <button id ="submitSignUp" type="submit">Sign Up</button>
-    </form>
+        <form id = "signUpForm">
+            <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            <div class="auth-form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-    <div id="verificationMessage" style="display:none;">
-        Verifying your email...
+            <div class="auth-form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <img src="../static/images/eye_vis_icon.png"
+                         class="toggle-password"
+                         id="togglePassword" 
+                         alt="eye_icon">
+                </div>
+            </div>
+
+            <button id="generatePassword" type="button">Generate Strong Password</button>
+            <button id="submitSignUp" type="submit">Sign Up</button>
+        </form>
+
+        <div class="auth-links">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+
+        <div id="verificationMessage" style="display:none;">
+            Verifying your email...
+        </div>
     </div>
 
     <script> 
