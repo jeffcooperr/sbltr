@@ -44,13 +44,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let listingColumn = document.querySelector(".page-layout > :nth-child(2)");
-    
+
             if (listingColumn) {
                 let savedScrollPosition = sessionStorage.getItem("listingColumnScroll");
                 if (savedScrollPosition !== null) {
                     listingColumn.scrollTop = savedScrollPosition;
                 }
-    
+
                 window.addEventListener("beforeunload", function () {
                     sessionStorage.setItem("listingColumnScroll", listingColumn.scrollTop);
                 });
@@ -63,11 +63,12 @@
         <a href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
         </a>
-        <nav class="nav-icons">
-            <div class="dropdown tooltip">
-                <i class="fa-solid fa-user"></i>
-                <span class="tooltiptext"></span>
-                <div class="dropdown-content" id="dropdown-menu">
+        <div class="nav-icons">
+            <div class="dropdown">
+                <a href="#" class="favorites tooltip" style="margin-right: 15px;">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+                <div class="dropdown-content">
                     <a href="{{ url_for('profile_page') }}">View Profile</a>
                     <a href="{{ url_for('login') }}">Logout</a>
                 </div>
@@ -80,7 +81,7 @@
                 <i class="fa-solid fa-heart"></i>
                 <span class="tooltiptext">Favorites</span>
             </a>
-        </nav>
+        </div>
     </header>
 
     <div class="page-layout">
