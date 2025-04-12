@@ -498,7 +498,8 @@ body.landing-page {
 #advanced-filters-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    padding: 16px;
 }
 
 #advanced-filters-form div {
@@ -514,6 +515,61 @@ body.landing-page {
     font-size: 1em;
     text-align: left;
     cursor: pointer;
+}
+
+#advanced-filters-form h4 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-size: 17px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#basic-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    max-width: 600px;
+}
+
+.filter-section-header {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 16px 0 8px;
+    text-align: left;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 8px;
+    min-width: 150px;
+}
+
+.tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px 16px;
+    margin-top: 8px;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.tag-item label {
+    margin: 0;
+    line-height: 1.2;
+}
+
+.tag-checkbox {
+    transform: scale(1.1);
 }
 
 /* Button styling */
@@ -748,4 +804,5 @@ button {
     position: relative;
     z-index: 10;
 }
+
 
