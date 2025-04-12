@@ -412,18 +412,18 @@ body.landing-page {
     text-align: center;
     padding: 40px;
 }
-
+  
 .landing-page .landing-container h1 {
     font-size: 3em;
     margin-bottom: 30px;
 }
-
+  
 .landing-page .buttons {
     display: flex;
     gap: 20px;
     justify-content: center;
 }
-
+  
 .landing-page .btn {
     background: white;
     color: #4a00e0;
@@ -433,7 +433,7 @@ body.landing-page {
     text-decoration: none;
     transition: background 0.3s ease, color 0.3s ease;
 }
-
+  
 .landing-page .btn:hover {
     background: #f0f0f0;
     color: #240082;
@@ -460,7 +460,7 @@ body.landing-page {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1000;  
     display: none;
     justify-content: center;
     align-items: center;
@@ -515,7 +515,8 @@ body.landing-page {
 #advanced-filters-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    padding: 16px;
 }
 
 #advanced-filters-form div {
@@ -531,6 +532,61 @@ body.landing-page {
     font-size: 1em;
     text-align: left;
     cursor: pointer;
+}
+
+#advanced-filters-form h4 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-size: 17px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#basic-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    max-width: 600px;
+}
+
+.filter-section-header {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 16px 0 8px;
+    text-align: left;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 8px;
+    min-width: 150px;
+}
+
+.tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px 16px;
+    margin-top: 8px;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.tag-item label {
+    margin: 0;
+    line-height: 1.2;
+}
+
+.tag-checkbox {
+    transform: scale(1.1);
 }
 
 /* Button styling */
@@ -766,7 +822,7 @@ button {
     z-index: 10;
 }
 
-@media (max-width: 75em) {
+@media (max-width: 768px) {
     .container,
     .card-container,
     .profile-card-container{
@@ -786,6 +842,114 @@ button {
    }
 }
 
+.auth-container h1 {
+    color: var(--catamount-green);
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.auth-form-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.auth-form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form-group input:focus {
+    outline: none;
+    border-color: var(--catamount-green);
+}
+
+.auth-container button {
+    background-color: var(--catamount-green);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px 0;
+}
+
+.auth-container button:hover {
+    background-color: rgb(16, 54, 40);
+}
+
+.auth-container .auth-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.auth-container .auth-links a {
+    color: var(--catamount-green);
+    text-decoration: none;
+}
+
+.auth-container .auth-links a:hover {
+    text-decoration: underline;
+}
+
+#generatePassword {
+    background-color: #666 !important;
+}
+
+#generatePassword:hover {
+    background-color: #555 !important;
+}
+
+body.auth-page {
+    position: relative;
+    background: url("/static/images/landing_page_bg.jpg");
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-page .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.6);
+    z-index: 1;
+}
+
+.auth-container {
+    position: relative;
+    z-index: 2;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 /* Dropdown */
 .dropdown {
   position: relative;
