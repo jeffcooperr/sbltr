@@ -63,11 +63,15 @@
         <a href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
         </a>
-        <p>
-            <a href="{{ url_for('profile_page') }}" class="favorites tooltip" style="margin-right: 15px;">
+        <nav class="nav-icons">
+            <div class="dropdown tooltip">
                 <i class="fa-solid fa-user"></i>
-                <span class="tooltiptext">View Profile</span>
-            </a>
+                <span class="tooltiptext"></span>
+                <div class="dropdown-content" id="dropdown-menu">
+                    <a href="{{ url_for('profile_page') }}">View Profile</a>
+                    <a href="{{ url_for('login') }}">Logout</a>
+                </div>
+            </div>
             <a href="{{ url_for('add_listing') }}" class="favorites tooltip" style="margin-right: 15px;">
                 <i class="fa-solid fa-plus"></i>
                 <span class="tooltiptext">Add a Listing</span>
@@ -76,7 +80,7 @@
                 <i class="fa-solid fa-heart"></i>
                 <span class="tooltiptext">Favorites</span>
             </a>
-        </p>
+        </nav>
     </header>
 
     <div class="page-layout">
