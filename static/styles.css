@@ -1153,7 +1153,7 @@ input::file-selector-button:hover,
 .tag-checkbox input[type="checkbox"] {
     display: none;
 }
- 
+
 .tag-checkbox {
     display: inline-block;
     padding: 10px 20px;
@@ -1165,11 +1165,11 @@ input::file-selector-button:hover,
     font-weight: bold;
     margin: 10px;
 }
- 
+
 .tag-checkbox:checked {
     border: 1px solid var(--gold);
 }
- 
+
 .tag-checkbox input[type="checkbox"]:checked + span,
 .tag-checkbox input[type="checkbox"]:checked ~ label,
 .tag-checkbox:has(input[type="checkbox"]:checked) {
