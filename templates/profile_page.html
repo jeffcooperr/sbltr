@@ -47,6 +47,9 @@
                     const formToSubmit = this.closest('form');
                     confirmDeleteBtn.setAttribute('data-form-id', formToSubmit.id);
 
+                    const address = this.getAttribute('listing-address');
+                    listing_address.textContent = address;
+
                     confirmationPopup.classList.add('show');
                 });
             });
@@ -166,10 +169,9 @@
                                 </div>
                             </div>
                         </a>
-
                         <div class="delete-button-wrapper" onclick="event.stopPropagation();">
                             <form id="delete-form-{{ listing.id }}" action="{{ url_for('delete_listing', listing=listing.id) }}" method="POST">
-                                <button type="button" class="in-favorites delete-listing-btn">
+                                <button type="button" class="in-favorites delete-listing-btn" listing-address="{{ listing.display_address}}">
                                     <i class="fa-solid fa-trash fa-lg" style="color: #d7423e;"></i>
                                 </button>
                             </form>
@@ -186,7 +188,7 @@
     <div id="deleteConfirmationPopup" class="popup-overlay">
         <div class="popup-content">
             <h3>Delete Listing</h3>
-            <p>Are you sure you want to delete the listing at <br><strong>Address Here</strong>?<br>This action cannot be undone.</p>
+            <p>Are you sure you want to delete the listing at <br><strong id="listing_address">Address</strong>?<br>This action cannot be undone.</p>
             <div class="popup-buttons">
                 <button id="cancelDelete" class="popup-btn cancel-btn">No, Keep It</button>
                 <button id="confirmDelete" class="popup-btn confirm-btn">Yes, Delete</button>
