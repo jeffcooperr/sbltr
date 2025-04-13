@@ -66,17 +66,16 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
             </a>
             <!-- Search bar -->
-            <input type="text" id="search" name="search" placeholder="Search by address"
+             <form method="GET" action="{{ url_for('home') }}" class="search-form" style="display: inline;">
+                <input type="text" id="search" name="search" placeholder="Search by address"
             class="search-bar" value="{{ request.args.get('search', '') }}">
+             </form>
             <!-- Advanced filters button -->
             <button id="advanced-filters-btn" class="advanced-filters-btn">Filters</button>
             <!-- Clear filters button -->
             <button id="clear-filters-btn" class="clear-filters-btn">Clear Filters</button>
         </div>
         <div class="filter-container">
-
-                
-
                 <!-- Overlay window for filter menu-->
                 <div id="advanced-filters-overlay" class="advanced-filters-overlay" style="display: none;">
                     <div class="overlay-content">
