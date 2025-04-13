@@ -433,9 +433,10 @@ body.landing-page {
     color: white;
     border: 1px solid #268553;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 18px;
     border-radius: 5px;
     font-weight: bold;
+    height: 40px;
 }
 
 .advanced-filters-btn:hover {
@@ -1148,9 +1149,11 @@ input::file-selector-button:hover,
     width: 525px;
     padding: 10px;
     border-radius: 15px;
-    margin-top: 20px;
     outline: none;
     border: 1px solid var(--catamount-green);
+    height: 25px;
+    margin-top: 15px;
+    font-size: 11pt;
 }
 
 .search-bar:focus {
@@ -1169,6 +1172,8 @@ input::file-selector-button:hover,
     border: 1px solid white;
     color: #268553;
     font-weight: bold;
+    height: 40px;
+    margin-top: 18px;
 }
 
 .clear-filters-btn:hover {
