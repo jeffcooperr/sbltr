@@ -67,8 +67,10 @@
             </a>
             <div class="filter-container">
                 <!-- Search bar -->
-                <input type="text" id="search" name="search" placeholder="Search by address"
-                    class="search-bar" value="{{ request.args.get('search', '') }}">
+            <form method="GET" action="{{ url_for('home') }}" class="search-form">
+                        <input type="text" id="search" name="search" placeholder="Search by address"
+                        class="search-bar" value="{{ request.args.get('search', '') }}">
+            </form> 
 
                 <!-- Advanced filters button -->
                 <button id="advanced-filters-btn" class="advanced-filters-btn">Filters</button>
