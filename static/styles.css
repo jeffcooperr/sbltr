@@ -103,7 +103,7 @@ body {
    transition: var(--transition);
    width: 100%;
    position: relative;
-   min-height: 350px;
+   min-height: fit-content;
    cursor: pointer;
 
 }
