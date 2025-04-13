@@ -50,6 +50,7 @@ def home():
         user_id = session['user_id']
 
         # Get filter inputs
+        search = request.args.get("search", '').lower()
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
@@ -81,6 +82,8 @@ def home():
             if roommates is not None and listing.get("roommates") != roommates:
                 continue
             if semester and semester != "Any" and listing.get("semester") != semester:
+                continue
+            if search and search not in listing["display_address"].lower():
                 continue
 
             listings.append(listing)
