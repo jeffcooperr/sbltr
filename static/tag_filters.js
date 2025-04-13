@@ -18,6 +18,7 @@ document.getElementById('apply-filters-btn').addEventListener('click', function(
     url.searchParams.delete('roommates');
     url.searchParams.delete('semester');
     url.searchParams.delete('max_distance');
+    url.searchParams.delete('search');
 
     // Append tags to the URL search parameters
     const selectedTags = getSelectedTags();
@@ -53,6 +54,7 @@ document.getElementById('clear-filters-btn').addEventListener('click', function(
     url.searchParams.delete('semester');
     url.searchParams.delete('max_distance');
     url.searchParams.delete('tags');
+    url.searchParams.delete('search');
 
     window.history.replaceState({}, '', url);
     
