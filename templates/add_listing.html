@@ -139,11 +139,54 @@
                     <button type="submit" class="submit-btn">Add Listing</button>
                 </form>
             </div>
+            <div class="image-preview-container">
+                <div id="imagePreview" class="image-preview">
+                    <div class="no-images-uploaded">
+                        <img src="{{ url_for('static', filename='images/upload_images_to_preview.png') }}" alt="Photo that says to upload images to preview them here">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- JavaScript to display images user uploaded -->
+    <script>
+        document.getElementById('image').addEventListener('change', function(event) {
+            const imagePreview = document.getElementById("imagePreview");
+            imagePreview.innerHTML = '';
+
+            // If the user uploaded images (length is > 0). Display these images.
+            if(this.files.length > 0){
+                const previewGrid = document.createElement('div');
+                previewGrid.className = 'preview-grid';
+
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+
+                    if (!file.type.startsWith('image/')) {
+                        continue;
+                    }
+
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+
+                    const img = document.createElement('img');
+                    img.className = 'preview-image';
+
+                    const fileUrl = URL.createObjectURL(file);
+                    img.src = fileUrl;
+                    img.alt = `Property image ${i+1}`;
+
+                    previewItem.appendChild(img);
+                    previewGrid.appendChild(previewItem);
+                }
+
+                imagePreview.appendChild(previewGrid);
+            }
+        });
+    </script>
 
 </body>
 </html>
