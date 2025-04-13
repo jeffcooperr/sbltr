@@ -18,6 +18,7 @@ header {
     margin: 0 auto;
     text-align: left;
     padding: 20px;
+    padding-top: 40px;
     background-color: #154833;
     height: 75px;
     display: flex;
@@ -139,18 +140,46 @@ body {
    display: flex;
    flex-direction: column;
    gap: 15px;
-   align-items: flex-start;
+   align-items: center;
    width: 100%;
    padding-top: 35px;
-   padding-bottom: 25px;
 }
 
 .filter-container input {
    width: 150px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   border-radius: 2px;
 }
 
 .filter-container select {
    width: 157px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   border-radius: 2px;
+}
+
+.filter-container input:focus,
+.filter-container select:focus {
+   border: 1px solid var(--gold);
+   outline: none;
+}
+
+.clear-filters-btn {
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid red;
+}
+ 
+.clear-filters-btn:hover {
+    cursor: pointer;
+    background-color: rgba(255, 0, 0, 0.9);
+}
+
+.filter button {
+    padding: 0.75em 2em;
 }
 
 .favorites {
@@ -1146,4 +1175,29 @@ input::file-selector-button:hover,
 .tag-checkbox:has(input[type="checkbox"]:checked) {
     background-color: rgb(38, 133, 83);
     color: var(--gold);
+}
+
+.image-preview-container img {
+    width: 150px;
+    display: inline-block;
+}
+
+.preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview-item {
+    flex: 0 1 auto;
+}
+
+.preview-image {
+    width: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.form-group {
+    padding-top: 50px;
 }
