@@ -61,32 +61,33 @@
 </head>
 <body>
     <header>
-        <a href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
-        </a>
-        <div class="filter-container">
-            <!-- Search bar -->
-            <label for="search">Search by Address:</label>
-            <input type="text" id="search" name="search" placeholder="123 Main St"
-                   value="{{ request.args.get('search', '') }}">
+        <div class="logo-and-search">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
+            </a>
+            <div class="filter-container">
+                <!-- Search bar -->
+                <input type="text" id="search" name="search" placeholder="Search by address"
+                    class="search-bar" value="{{ request.args.get('search', '') }}">
 
-            <!-- Advanced filters button -->
-            <button id="advanced-filters-btn" class="advanced-filters-btn">Filters</button>
+                <!-- Advanced filters button -->
+                <button id="advanced-filters-btn" class="advanced-filters-btn">Filters</button>
 
-            <!-- Overlay window for filter menu-->
-            <div id="advanced-filters-overlay" class="advanced-filters-overlay" style="display: none;">
-                <div class="overlay-content">
-                    <div id="advanced-filters-form">Advanced Filters</div>
-                    <button type="button" id="apply-filters-btn">Apply Filters</button>
-                    <button type="button" id="close-filters-btn">Close</button>
+                <!-- Overlay window for filter menu-->
+                <div id="advanced-filters-overlay" class="advanced-filters-overlay" style="display: none;">
+                    <div class="overlay-content">
+                        <div id="advanced-filters-form">Advanced Filters</div>
+                        <button type="button" id="apply-filters-btn">Apply Filters</button>
+                        <button type="button" id="close-filters-btn">Close</button>
+                    </div>
                 </div>
+
+                <!-- Clear filters button -->
+                <button id="clear-filters-btn" class="clear-filters-btn">Clear Filters</button>
+
+                <!-- Filter Form -->
+                <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter"></form>
             </div>
-
-            <!-- Clear filters button -->
-            <button id="clear-filters-btn">Clear Filters</button>
-
-            <!-- Filter Form -->
-            <form id="filter" method="GET" action="{{ url_for('home') }}" class="filter"></form>
         </div>
         <div class="nav-icons">
             <div class="dropdown">

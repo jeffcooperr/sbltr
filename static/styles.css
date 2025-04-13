@@ -30,6 +30,7 @@ header {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-top: 20px;
 }
 
 header img {
@@ -73,7 +74,7 @@ body {
 
 .page-layout {
    display: grid;
-   grid-template-columns: 0.75fr 2.25fr 2.5fr;
+   grid-template-columns: 2.5fr 2.5fr;
    gap: 20px;
    padding: 20px;
 }
@@ -143,14 +144,6 @@ body {
    width: 100%;
    padding-top: 35px;
    padding-bottom: 25px;
-}
-
-.filter-container input {
-   width: 150px;
-}
-
-.filter-container select {
-   width: 157px;
 }
 
 .favorites {
@@ -436,15 +429,18 @@ body.landing-page {
 /* Styles for advanced filters */
 .advanced-filters-btn {
     padding: 10px 20px;
-    background-color: #0056b3;
+    background-color: #268553;
     color: white;
-    border: none;
+    border: 1px solid #268553;
     cursor: pointer;
     margin-top: 10px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 .advanced-filters-btn:hover {
-    background-color: #004085;
+    background-color: var(--catamount-green);
+    border: 1px solid var(--gold);
 }
 
 .advanced-filters-overlay {
@@ -1146,4 +1142,38 @@ input::file-selector-button:hover,
 .tag-checkbox:has(input[type="checkbox"]:checked) {
     background-color: rgb(38, 133, 83);
     color: var(--gold);
+}
+
+.search-bar {
+    width: 525px;
+    padding: 10px;
+    border-radius: 15px;
+    margin-top: 20px;
+    outline: none;
+    border: 1px solid var(--catamount-green);
+}
+
+.search-bar:focus {
+    border: 1px solid var(--gold);
+    outline: none;
+}
+
+.logo-and-search {
+    display: flex;
+    gap: 10px;
+    height: 75px;
+}
+
+.clear-filters-btn {
+    border-radius: 5px;
+    border: 1px solid white;
+    color: #268553;
+    font-weight: bold;
+}
+
+.clear-filters-btn:hover {
+    cursor: pointer;
+    background-color: var(--catamount-green);
+    border: 1px solid var(--gold);
+    color: white;
 }
