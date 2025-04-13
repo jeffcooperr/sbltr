@@ -993,3 +993,157 @@ body.auth-page {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+/* General add listing page styles */
+.add-listing {
+    position: relative;
+    background: url("/static/images/landing_page_bg.jpg") no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .add-listing h1 {
+    font-size: 24pt;
+    text-align: center;
+ }
+ 
+/* Add listing form */
+.add-listing-form {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 80%;
+    padding: 20px 40px 0 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 13pt;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-family: 'Lato', sans-serif;
+}
+ 
+.input-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 65%;
+    margin: 15px auto;
+    position: relative;
+    display: inline-block;
+}
+
+.input-box .form-label {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    padding: 0 10px;
+    pointer-events: none;
+    transition: 0.15s all ease;
+}
+
+.input-box input:focus + .form-label,
+.input-box select:focus + .form-label,
+.input-box textarea:focus + .form-label,
+.input-box input:valid + .form-label,
+.input-box select:valid + .form-label,
+.input-box textarea:not(:placeholder-shown) + .form-label {
+    transform: translate(-10px, -37px);
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea {
+   height: 45px;
+   text-align: left;
+   font-size: 13pt;
+   width: 100%;
+   border-radius: 5px;
+   border: 1px solid var(--catamount-green);
+   outline: none;
+   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.input-box input:focus,
+.input-box select:focus,
+.input-box textarea:focus {
+   border: 1px solid var(--gold);
+   outline: none;
+}
+
+textarea {
+    resize: vertical;
+    font-family: 'Lato', sans-serif;
+}
+
+/* Add listing file upload button */
+.file-select {
+   padding: 30px 0px 30px 0px;
+}
+
+.file-select label {
+   padding-right: 20px;
+}
+
+input::file-selector-button,
+.filter button {
+   padding: 0.75em;
+   background-color: rgba(38, 133, 83, 0.7);
+   border-radius: 5px;
+   color: white;
+   font-weight: bold;
+   border: 1px solid var(--gold);
+}
+
+input::file-selector-button:hover,
+.filter button:hover {
+   background-color: rgba(38, 133, 83, 0.9);
+   cursor: pointer;
+}
+
+/* Add listing submit button */
+.submit-btn {
+    padding: 1em 10em;
+    background-color: rgba(38, 133, 83, 0.7);
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    border: 1px solid var(--gold);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    font-size: 17px;
+}
+
+.submit-btn:hover {
+    background-color: rgba(38, 133, 83, 0.9);
+    cursor: pointer;
+}
+
+/* Add listing page filter checkboxes */
+.tag-checkbox input[type="checkbox"] {
+    display: none;
+}
+ 
+.tag-checkbox {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1.5px solid var(--catamount-green);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: var(--catamount-green);
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px;
+}
+ 
+.tag-checkbox:checked {
+    border: 1px solid var(--gold);
+}
+ 
+.tag-checkbox input[type="checkbox"]:checked + span,
+.tag-checkbox input[type="checkbox"]:checked ~ label,
+.tag-checkbox:has(input[type="checkbox"]:checked) {
+    background-color: rgb(38, 133, 83);
+    color: var(--gold);
+}
