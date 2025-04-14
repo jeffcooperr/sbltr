@@ -89,9 +89,13 @@ We have created a client/server system that serves as a social platform for coll
 <div style="font-size: 1em;">
 <p>Once logged in, users can do the following: </p>
 <ol>
+    <li>Users can view a listing's location by viewing the map on the main page. Each house icon represents a listing, hovering over the house reveals the listing address and rent that is located there.</li>
     <li>Users can view a listing's details by clicking on its post on the main page.</li>
-    <li>Users can create a listing by clicking the plus icon in the top right corner of the page, next to the heart.<br>When creating a listing for a sublet, users must enter the address, semester, and number of roommates. At least one image must be uploaded, with a maximum of three allowed.</li>
-    <li>Users can favorite listings by clicking the heart on the post. Favorited listings can then be viewed by clicking the heart in the top right corner of the page (currently in development).</li>
+    <li>Users can create a listing by clicking the plus icon in the top right corner of the page, next to the heart. When creating a listing for a sublet, users must enter the address, semester, and number of roommates. At least one image must be uploaded, with a maximum of three allowed.</li>
+    <li>Users can favorite listings by clicking the heart on the post. Favorited listings can then be viewed by clicking the heart in the top right corner of the page.</li>
+    <li>Users can view or delete their own listings by clicking the "view profile" option under the user icon in the top right corner of the page, next to the heart and plus. To delete a listing, click on the trash can icon on one of your listings and confirm deletion.</li>
+    <li>Users can contact the owner of a listing via email by navigating to the listing details page and scrolling down to the 'Contact Information' section. This section displays the poster's email address, and clicking the button will open a new email draft addressed to them.</li>
+    <li>Users can search for listings under a certain address using the search bar at the top of the page, or can filter their search using the 'Filter' button. To remove any applied filters, click 'Clear Filters'.</li>
 </ol>
 </div>
 
@@ -99,15 +103,20 @@ We have created a client/server system that serves as a social platform for coll
 
 <a>Images of what the pages of the website currently look like (Will update along with major changes in the project)</a>
 <br />
-<img src="website-photos/LoginPage.png" alt="Login Page" width="500">
-<br />
-<img src="website-photos/NewAccountPage.png" alt="New Account Page" width="500">
-<br />
-<img src="website-photos/HomePage.png" alt="Home Page" width="500">
-<br />
-<img src="website-photos/ListingDetailsPage.png" alt="Listing Details Page" width="500">
 
-- March 26 2025
+<img src="static/images/login.png" alt="Login Page" width="500">
+<br />
+<img src="static/images/sign_up.png" alt="New Account Page" width="500">
+<br />
+<img src="static/images/home_page.png" alt="Home Page" width="500">
+<br />
+<img src="static/images/profile_page.png" alt="Profile Page" width="500">
+<br />
+<img src="static/images/favorites_page.png" alt="Favorites Page" width="500">
+
+
+
+- April 13 2025
 
 
 
