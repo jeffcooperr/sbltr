@@ -101,12 +101,12 @@ def home():
         user_ref = db.collection("users").document(session['user_id'])
         user_doc = user_ref.get()
         user_data = user_doc.to_dict()
-        favorites = user_data.get('favorites', [])
+        user_favorites = user_data.get('favorites', [])
 
         return render_template('index.html',
                                listings=listings,
                                google_api_key=GOOGLE_API_KEY,
-                               favorites=favorites)
+                               favorites=user_favorites)
 
     return redirect(url_for('landing_page'))
 
@@ -131,7 +131,7 @@ def profile_page():
         user_doc = user_ref.get()
         user_data = user_doc.to_dict()
 
-        favorites = user_data.get('favorites', [])
+        user_favorites = user_data.get('favorites', [])
         user_email = (user_data.get("email", "Email not available")
                      if user_data else "Email not available")
         username = user_email.split('@')[0]
@@ -161,12 +161,12 @@ def profile_page():
 
             listings.append(listing)
 
-        favorites = user_data.get('favorites', [])
+        user_favorites = user_data.get('favorites', [])
 
         return render_template('profile_page.html',
                                listings=listings,
                                google_api_key=GOOGLE_API_KEY,
-                               favorites=favorites,
+                               favorites=user_favorites,
                                username=username)
 
     # <-- if user is not logged in, handle it here
@@ -282,7 +282,7 @@ def login():
         }
 
         try:
-            response = requests.post(url, json=payload)
+            response = requests.post(url, json=payload, timeout=10.0)
             data = response.json()
 
             print("Response from Firebase:", data)
@@ -292,7 +292,7 @@ def login():
                 user_info_url = (f"https://identitytoolkit.googleapis.com"
                                  f"/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}")
                 user_payload = {"idToken": data["idToken"]}
-                user_response = requests.post(user_info_url, json=user_payload)
+                user_response = requests.post(user_info_url, json=user_payload, timeout=10.0)
                 user_data = user_response.json()
 
                 if "users" in user_data and len(user_data["users"]) > 0:
@@ -311,7 +311,7 @@ def login():
                             "requestType": "VERIFY_EMAIL",
                             "idToken": data["idToken"]
                         }
-                        requests.post(verification_url, json=verification_payload)
+                        requests.post(verification_url, json=verification_payload, timeout=10.0)
 
                         flash(
                             "Your email is not verified! A new verification "
