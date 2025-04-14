@@ -1,7 +1,11 @@
+"""sbltr: sublet website
+This contains the routes for the app
+and the functions for the routes."""
+
 import os
 import requests
 import firebase_admin
-from firebase_admin import credentials, firestore, auth, storage
+from firebase_admin import credentials, firestore, auth
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
@@ -34,7 +38,9 @@ FIREBASE_APP_ID = os.getenv('FIREBASE_APP_ID')
 FIREBASE_MEASUREMENT_ID = os.getenv('FIREBASE_MEASUREMENT_ID')
 
 # Initialize Firestore
-cred = credentials.Certificate('../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json')  # Update with the correct path
+cred = credentials.Certificate(
+    '../sbltr-c125d-firebase-adminsdk-fbsvc-d691b459c6.json'
+)  # Update with the correct path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -44,6 +50,11 @@ CAMPUS_COORDINATES = (44.47824202883298, -73.19629286190413)
 
 @app.route('/', methods=['GET'])
 def home():
+    """
+    This is the main page of the app.
+    It shows all the listings in the database.
+    """
+
     # If the user is logged in, show the listings
     if 'user_id' in session:
         # Get user id to filter out users own listings.
@@ -103,10 +114,19 @@ def home():
 
 @app.route('/landing_page')
 def landing_page():
+    """
+    This is the landing page of the app.
+    This is the first page that the user sees.
+    It prompts the user to sign up or log in.
+    """
     return render_template('landing_page.html')
 
 @app.route('/profile_page', methods=['GET', 'POST'])
 def profile_page():
+    """
+    This is the profile page of the app.
+    It shows the user's housing listings.
+    """
     if 'user_id' in session:
         user_id = session['user_id']
         user_ref = db.collection("users").document(user_id)
@@ -114,13 +134,13 @@ def profile_page():
         user_data = user_doc.to_dict()
 
         favorites = user_data.get('favorites', [])
-        user_email = user_data.get("email", "Email not available") if user_data else "Email not available"
+        user_email = (user_data.get("email", "Email not available")
+                     if user_data else "Email not available")
         username = user_email.split('@')[0]
 
         max_distance = request.args.get("max_distance", type=float)
         max_rent = request.args.get("max_rent", type=float)
         roommates = request.args.get("roommates", type=int)
-        semester = request.args.get("semester")
 
         # Fetch user housing listings from Firestore
         listings_ref = db.collection("listings").where("user_id", "==", user_id)
@@ -156,6 +176,10 @@ def profile_page():
 
 @app.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():
+    """
+    This is the page that allows the user to add a new listing.
+    Prompts the user to fill out a form with the listing information.
+    """
     if 'user_id' not in session:
         flash("Please log in to add a listing.")
         return redirect(url_for('login'))
@@ -173,7 +197,8 @@ def add_listing():
                                listing_limit_reached=listing_limit_reached)
 
     if request.method == 'POST':
-        # Check how many listings the user already has. If it is 3, then they will be unable to make a new one.
+        # Check how many listings the user already has.
+        # If it is 3, then they will be unable to make a new one.
 
         # Otherwise save the listing.
         address = request.form['address'].strip()
@@ -240,12 +265,17 @@ def add_listing():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    This is the login page of the app.
+    It prompts the user to enter their email and password.
+    """
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
 
         # Firebase REST API endpoint for sign-in
-        url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
+        url = (f"https://identitytoolkit.googleapis.com/v1/accounts:"
+               f"signInWithPassword?key={FIREBASE_WEB_API_KEY}")
 
         payload = {
             "email": email,
@@ -261,7 +291,8 @@ def login():
 
             if "idToken" in data:
                 # Get user verification status
-                user_info_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}"
+                user_info_url = (f"https://identitytoolkit.googleapis.com"
+                                 f"/v1/accounts:lookup?key={FIREBASE_WEB_API_KEY}")
                 user_payload = {"idToken": data["idToken"]}
                 user_response = requests.post(user_info_url, json=user_payload)
                 user_data = user_response.json()
@@ -276,7 +307,8 @@ def login():
                         return redirect(url_for('home'))
                     else:
                         # Send a new verification email if they didn't verify their email.
-                        verification_url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+                        verification_url = (f"https://identitytoolkit.googleapis.com/v1/accounts:"
+                                            f"sendOobCode?key={FIREBASE_WEB_API_KEY}")
                         verification_payload = {
                             "requestType": "VERIFY_EMAIL",
                             "idToken": data["idToken"]
@@ -284,7 +316,8 @@ def login():
                         requests.post(verification_url, json=verification_payload)
 
                         flash(
-                            "Your email is not verified! A new verification email has been sent. Please check your inbox.")
+                            "Your email is not verified! A new verification "
+                            "email has been sent. Please check your inbox.")
                         return redirect(url_for('login'))
                 else:
                     flash("Unable to retrieve user information. Please try again.")
@@ -304,6 +337,10 @@ def login():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    """
+    This is the signup page of the app.
+    It prompts the user to sign up using their email and password.
+    """
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -399,7 +436,6 @@ def delete_listing(listing):
     docs = listings_ref.stream()
 
     for doc in docs:
-        listing1 = doc.to_dict()
 
         if doc.id == listing:
             doc_ref = db.collection("listings").document(doc.id)
@@ -487,7 +523,8 @@ def listing_details(listing_id):
     return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
 
 # Used for dynamically adding tags to the advanced filters menu
-# Takes directly from firebase (Need to edit tag names to be more user friendly (Ex. "Price Negotiable" instead of price_negotiable))
+# Takes directly from firebase (Need to edit tag names to be more
+# user friendly (Ex. "Price Negotiable" instead of price_negotiable))
 @app.route('/api/tags', methods=['GET'])
 def get_tags():
     listings_ref = db.collection("listings")
