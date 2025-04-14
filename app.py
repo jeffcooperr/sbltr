@@ -241,6 +241,7 @@ def add_listing():
             "semester": semester,
             "distance": distance,
             "roommates": roommates,
+            "bathrooms": bathrooms,
             "rent": rent,
             "tags": tags,
             "description": description,
