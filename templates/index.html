@@ -63,7 +63,7 @@
     <header>
         <div class="logo-and-search">
             <a href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SBLTR logo" class="index-logo">
             </a>
             <!-- Search bar -->
              <form method="GET" action="{{ url_for('home') }}" class="search-form" style="display: inline;">
