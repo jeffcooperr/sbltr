@@ -43,7 +43,7 @@
     <!-- Tracks the position of the listings and restores the position when the page reloads -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            let listingColumn = document.querySelector(".page-layout > :nth-child(2)");
+            let listingColumn = document.querySelector(".page-layout > :nth-child(1)");
 
             if (listingColumn) {
                 let savedScrollPosition = sessionStorage.getItem("listingColumnScroll");
