@@ -332,6 +332,7 @@ def signup():
 
 @app.route('/logout')
 def logout():
+    """App route for logging out"""
     session.pop('user_id', None)
     flash("You have been logged out.")
     return redirect(url_for('login'))
@@ -339,6 +340,7 @@ def logout():
 
 @app.route('/favorites')
 def favorites():
+    """App route for the favorites page"""
     # Fetch housing listings from Firestore
     listings_ref = db.collection("listings")
     docs = listings_ref.stream()
@@ -355,9 +357,9 @@ def favorites():
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
     user_data = user_doc.to_dict()
-    favorites = user_data.get('favorites', [])
+    user_favorites = user_data.get('favorites', [])
 
-    return render_template('favorites.html', listings=listings, favorites=favorites)
+    return render_template('favorites.html', listings=listings, favorites=user_favorites)
 
 
 @app.route('/add_favorite/<listing>', methods=['POST'])
