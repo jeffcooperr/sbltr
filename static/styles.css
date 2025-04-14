@@ -35,7 +35,6 @@ header {
 
 header img {
    height: 90px;
-   transform: translateY(-8px);
 }
 
 header h1 {
@@ -1207,4 +1206,8 @@ input::file-selector-button:hover,
     background-color: var(--catamount-green);
     border: 1px solid var(--gold);
     color: white;
+}
+
+.index-logo {
+    transform: translateY(-9px);
 }

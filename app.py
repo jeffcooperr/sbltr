@@ -1,14 +1,14 @@
 import os
+import base64
+from io import BytesIO
 import requests
 import firebase_admin
-from firebase_admin import credentials, firestore, auth, storage
+from firebase_admin import credentials, firestore, auth
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from dotenv import load_dotenv
-import base64
 from PIL import Image
-from io import BytesIO
 
 load_dotenv()  # take environment variables from .env.
 # Code of your application, which uses environment variables (e.g. from `os.environ` or
@@ -339,82 +339,80 @@ def logout():
 
 @app.route('/favorites')
 def favorites():
-    if 'user_id' in session:
-        # Fetch housing listings from Firestore
-        listings_ref = db.collection("listings")
-        docs = listings_ref.stream()
+    # Fetch housing listings from Firestore
+    listings_ref = db.collection("listings")
+    docs = listings_ref.stream()
 
-        listings = []
-        for doc in docs:
-            listing = doc.to_dict()
-            listing["id"] = doc.id
-            listings.append(listing)
+    listings = []
+    for doc in docs:
+        listing = doc.to_dict()
+        listing["id"] = doc.id
+        listings.append(listing)
 
-            listing["display_address"] = listing["address"].split(',')[0]
+        listing["display_address"] = listing["address"].split(',')[0]
 
-        # Fetch user's favorites list
-        user_ref = db.collection("users").document(session['user_id'])
-        user_doc = user_ref.get()
-        user_data = user_doc.to_dict()
-        favorites = user_data.get('favorites', [])
-
-        return render_template('favorites.html', listings=listings, favorites=favorites)
-
-
-@app.route('/add_favorite/<listing>', methods=['POST'])
-def add_favorite(listing):
-    # Retrieve current favorites list
+    # Fetch user's favorites list
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
     user_data = user_doc.to_dict()
     favorites = user_data.get('favorites', [])
 
+    return render_template('favorites.html', listings=listings, favorites=favorites)
+
+
+@app.route('/add_favorite/<listing>', methods=['POST'])
+def add_favorite(listing):
+    """Adds the passed listing to the user's favorites"""
+    # Retrieve current favorites list
+    user_ref = db.collection("users").document(session['user_id'])
+    user_doc = user_ref.get()
+    user_data = user_doc.to_dict()
+    user_favorites = user_data.get('favorites', [])
+
     # Add new listing to list (if not repeated)
-    if listing not in favorites:
-        favorites.append(listing)
-        user_ref.update({"favorites": favorites})
+    if listing not in user_favorites:
+        user_favorites.append(listing)
+        user_ref.update({"favorites": user_favorites})
     return redirect(request.referrer)
 
 
 @app.route('/delete_favorite/<listing>', methods=['POST'])
 def delete_favorite(listing):
+    """Removes the passed listing from the user's favorites"""
     # Retrieve current favorites list
     user_ref = db.collection("users").document(session['user_id'])
     user_doc = user_ref.get()
     user_data = user_doc.to_dict()
-    favorites = user_data.get('favorites', [])
+    user_favorites = user_data.get('favorites', [])
 
     # Add new listing to list (if not repeated)
-    for favorite in favorites:
+    for favorite in user_favorites:
         if favorite == listing:
-            favorites.remove(favorite)
+            user_favorites.remove(favorite)
 
-    user_ref.update({"favorites": favorites})
+    user_ref.update({"favorites": user_favorites})
     return redirect(request.referrer)
 
 @app.route('/delete_listing/<listing>', methods=['POST'])
 def delete_listing(listing):
+    """Removes the passed listing from the Firebase"""
     user_id = session['user_id']
     listings_ref = db.collection("listings").where("user_id", "==", user_id)
     docs = listings_ref.stream()
 
     for doc in docs:
-        listing1 = doc.to_dict()
-
         if doc.id == listing:
             doc_ref = db.collection("listings").document(doc.id)
             # Delete the document from Firestore
             doc_ref.delete()
 
-            print(f"Listing has been been deleted.")
+            print("Listing has been been deleted.")
             break
 
     return redirect(request.referrer)
 
-
-# Should edit this at some point so that user can enter city, state, country
-# Or just make it automatic when they autofill address
 def get_distance(address):
+    """Automatically calculates the distance between a listing and UVM campus"""
     geolocator = Nominatim(user_agent="sublet")
     location = geolocator.geocode(address)
 
@@ -426,14 +424,15 @@ def get_distance(address):
 
 
 def image_convert(image):
-    # MAX_SIZE is the maximum size (in bytes) Firebase allows for a string
-    MAX_SIZE = 1048487
+    """Method to convert images to base64 strings to be stored in Firebase"""
+    # max_size is the maximum size (in bytes) Firebase allows for a string
+    max_size = 1048487
     image = Image.open(image)
     # Ensure that the image is in JPEG format
     image = image.convert('RGB')
 
     quality = 50
-    # Initializes a buffer which will be used to store the image being compared to MAX_SIZE
+    # Initializes a buffer which will be used to store the image being compared to max_size
     buffer = BytesIO()
 
     while quality > 5:
@@ -446,15 +445,18 @@ def image_convert(image):
 
         # Encode the image as a base64 string and check if its size is below the limit
         encoded_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
-        if len(encoded_string) <= MAX_SIZE:
+        if len(encoded_string) <= max_size:
             return encoded_string
 
         # Reduce quality if image string was too large
         quality -= 5
+    
+    return None
 
 
 @app.route('/listing/<listing_id>')
 def listing_details(listing_id):
+    """App route for the details page for each listing"""
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -486,10 +488,11 @@ def listing_details(listing_id):
 
     return render_template('listing_details.html', listing=listing, google_api_key=GOOGLE_API_KEY)
 
-# Used for dynamically adding tags to the advanced filters menu
-# Takes directly from firebase (Need to edit tag names to be more user friendly (Ex. "Price Negotiable" instead of price_negotiable))
 @app.route('/api/tags', methods=['GET'])
 def get_tags():
+    """This function allows for dynamically adding tags to the advanced filters menu
+    Takes directly from firebase (Need to edit tag names to be more user friendly
+    (Ex. "Price Negotiable" instead of price_negotiable))"""
     listings_ref = db.collection("listings")
     docs = listings_ref.stream()
 
