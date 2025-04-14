@@ -110,9 +110,13 @@ We have created a client/server system that serves as a social platform for coll
 <br />
 <img src="static/images/home_page.png" alt="Home Page" width="500">
 <br />
+<img src="static/images/filter_page.png" alt="Filters Page" width="500">
+<br />
 <img src="static/images/profile_page.png" alt="Profile Page" width="500">
 <br />
 <img src="static/images/favorites_page.png" alt="Favorites Page" width="500">
+<br />
+<img src="static/images/add_listing_page.png" alt="Add Listing Page" width="500">
 
 
 
