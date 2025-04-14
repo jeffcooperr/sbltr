@@ -64,19 +64,35 @@
 
     <div class="details-page-layout">
         <div class="details-container">
-            <p>
+            <!-- <p>
                 <a href="{{ url_for('home') }}" class="favorites tooltip" style="margin-right: 15px;">
                     <i class="fa-solid fa-house fa-xl"></i>
                     <span class="tooltiptext">Home</span>
                 </a>
-            </p>
+            </p> -->
             <div class="details-content" 
                 data-lat="{{ listing.latitude }}" 
                 data-lng="{{ listing.longitude }}"
                 data-address="{{ listing.display_address }}"
                 data-rent="{{ listing.rent }}">
-                <h1>{{ listing.display_address }}</h1>
                 
+                <div class="details-header">
+                    <h1>{{ listing.display_address }}</h1>
+                    <!-- {% if listing.id in favorites %}
+                        <form action="{{ url_for('delete_favorite', listing=listing.id) }}" method="POST">
+                            <button type="submit" class="in-favorites">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ url_for('add_favorite', listing=listing.id) }}" method="POST">
+                            <button type="submit" class="out-favorites">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                        </form>
+                    {% endif %} -->
+                </div>
+
                 <div class="price-semester">
                     <div class="price">
                         <span class="amount">$ {{ listing.rent }}</span>
@@ -190,6 +206,7 @@
 
     <!-- Add Google Maps Distance Matrix API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=geometry"></script>
+    <script src="{{ url_for('static', filename='map_styling.js') }}"></script>
     <script src="{{ url_for('static', filename='details_map.js') }}"></script>
 </body>
 </html>

@@ -1,23 +1,9 @@
 function initMap() {
-    // play with styling
-    const subtleStyle =
-        [
-            {
-                "featureType": "all",
-                "elementType": "all",
-                "stylers": [
-                    {
-                        "visibility": "on"
-                    }
-                ]
-            },
-        ]
-        
 
     const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
+        zoom: 15,
         center: { lat: 44.477, lng: -73.205 },  // UVM area
-        styles: subtleStyle
+        styles: mapStyle
     });
 
     // font awesome house icon
