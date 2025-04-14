@@ -8,7 +8,6 @@ from io import BytesIO
 import requests
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
-from firebase_admin import credentials, firestore, auth
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
@@ -58,8 +57,6 @@ def home():
 
     # If the user is logged in, show the listings
     if 'user_id' in session:
-        # Get user id to filter out users own listings.
-        user_id = session['user_id']
 
         # Get filter inputs
         search = request.args.get("search", '').lower()
@@ -491,7 +488,7 @@ def image_convert(image):
 
         # Reduce quality if image string was too large
         quality -= 5
-    
+
     return None
 
 
